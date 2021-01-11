@@ -151,8 +151,12 @@ public final class Initializer {
             FillExaminationDummies(con, generator);
             FillHospitalizationDummies(con, generator);
             FillVisitDummies(con, generator);
-        } catch (SQLException e) {
-            throw e;
+        } catch (Exception e) {
+            if (e instanceof SQLException) {
+                throw (e);
+            } else {
+                e.printStackTrace();
+            }
         }
     }
 
