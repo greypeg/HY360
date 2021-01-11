@@ -10,26 +10,21 @@ package Model;
  * @author Stefito
  */
 public class ChronicDisease {
-    private final String patientSurname;
-    private final String patientName;
-    private final String diseaseName;
 
-    public ChronicDisease(String patientSurname, String patientName, String diseaseName) {
-        this.patientSurname = patientSurname;
-        this.patientName = patientName;
-        this.diseaseName = diseaseName;
+    private final Patient patient;
+    private final Disease disease;
+
+    public ChronicDisease(Patient patient, Disease disease) {
+        this.patient = patient;
+        this.disease = disease;
     }
 
-    public String getPatientSurname() {
-        return this.patientSurname;
+    public Patient getPatient() {
+        return this.patient;
     }
 
-    public String getPatientName() {
-        return this.patientName;
-    }
-
-    public String getDiseaseName() {
-        return this.diseaseName;
+    public Disease getDisease() {
+        return this.disease;
     }
 
 }

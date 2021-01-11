@@ -10,16 +10,17 @@ package Model;
  * @author Stefito
  */
 public class InfoSysUser {
+
     private final String username;
     private final String password;
-    private final String surname;
-    private final String name;
+    private final Employee employee;
+    private final Patient patient;
 
-    public InfoSysUser(String username, String password, String surname, String name) {
+    public InfoSysUser(String username, String password, Employee employee, Patient patient) {
         this.username = username;
         this.password = password;
-        this.surname = surname;
-        this.name = name;
+        this.employee = employee;
+        this.patient = patient;
     }
 
     public String getUsername() {
@@ -30,12 +31,12 @@ public class InfoSysUser {
         return this.password;
     }
 
-    public String getSurname() {
-        return this.surname;
+    public Employee getEmployee() {
+        return this.employee;
     }
 
-    public String getName() {
-        return this.name;
+    public Patient getPatient() {
+        return this.patient;
     }
 
 }

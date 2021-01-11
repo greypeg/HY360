@@ -17,6 +17,7 @@ public final class Generator {
 
     private final String[] surnames;
     private final String[] names;
+    private final int[] AMKAs;
     private final String[] specialties;
     private final String[] usernames;
     private final String[] passwords;
@@ -37,6 +38,8 @@ public final class Generator {
 
     private final String[] days;
     private final String[] months;
+
+    private final String[] symptoms;
 
     private final Patient[] dummyPatients;
     private final Doctor[] dummyDoctors;
@@ -59,46 +62,47 @@ public final class Generator {
         int j = 0;
 
         for (int i = 0; i < 5; i++) {
-            this.dummyPatients[i] = new Patient(this.surnames[j], this.names[j], get8DigitNum(),
+            this.dummyPatients[i] = new Patient(this.surnames[j], this.names[j], this.AMKAs[i],
                     "Κανένας", "69" + String.valueOf(get8DigitNum()), this.streets[i], this.cities[i], this.numbers[i]);
+
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], null, this.dummyPatients[i]);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyDoctors[i] = new Doctor(this.surnames[j], this.names[j], this.specialties[i]);
+            this.dummyDoctors[i] = new Doctor(j, this.surnames[j], this.names[j], this.specialties[i]);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyDoctors[i], null);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyNurses[i] = new Nurse(this.surnames[j], this.names[j]);
+            this.dummyNurses[i] = new Nurse(j, this.surnames[j], this.names[j]);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyNurses[i], null);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyAdmins[i] = new AdminStaff(this.surnames[j], this.names[j]);
+            this.dummyAdmins[i] = new AdminStaff(j, this.surnames[j], this.names[j]);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyAdmins[i], null);
             j++;
         }
 
-        for (int i = 0; i < 5; i++) {
-            this.dummyInfoSysUsers[i] = new InfoSysUser(this.usernames[i], this.passwords[i], this.surnames[(6 * i) % 20], this.names[(6 * i) % 20]);
-        }
-
-        this.dummyVigils[0] = new Vigil(this.surnames[5], this.names[5], this.vigilTypes[0]);
-        this.dummyVigils[1] = new Vigil(this.surnames[19], this.names[19], this.vigilTypes[1]);
-        for (int i = 0; i < 3; i++) {
-            this.dummyVigils[i + 2] = new Vigil(this.surnames[12 + i], this.names[12 + i], this.vigilTypes[i]);
-        }
+        this.dummyVigils[0] = new Vigil(this.dummyDoctors[0], this.vigilTypes[0]);
+        this.dummyVigils[1] = new Vigil(this.dummyDoctors[1], this.vigilTypes[1]);
+        this.dummyVigils[2] = new Vigil(this.dummyDoctors[2], this.vigilTypes[2]);
+        this.dummyVigils[3] = new Vigil(this.dummyNurses[0], this.vigilTypes[0]);
+        this.dummyVigils[4] = new Vigil(this.dummyAdmins[0], this.vigilTypes[0]);
 
         for (int i = 0; i < 5; i++) {
             this.dummyDiseases[i] = new Disease(this.diseasesNames[i]);
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyChronicDiseases[i] = new ChronicDisease(this.surnames[0], this.names[0], this.diseasesNames[i]);
+            this.dummyChronicDiseases[i] = new ChronicDisease(this.dummyPatients[i], this.dummyDiseases[i]);
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyMedicines[i] = new Medicine(this.medicineNames[i], this.medicineTypes[i], this.medicineASCs[i], this.diseasesNames[i]);
+            this.dummyMedicines[i] = new Medicine(this.medicineNames[i], this.medicineTypes[i], this.medicineASCs[i], this.dummyDiseases[i]);
         }
 
         for (int i = 0; i < 5; i++) {
@@ -106,14 +110,13 @@ public final class Generator {
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyHospitalizations[i] = new Hospitalization(i, this.surnames[i],
-                    this.names[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
+            this.dummyHospitalizations[i] = new Hospitalization(i, this.dummyPatients[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
                     2020, this.days[(i * 5) % 7], this.months[(i * 5) % 12], 2021);
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyVisits[i] = new Visit(i, this.surnames[i], this.names[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
-                    2020, this.examinationTypes[i], this.medicineNames[i], i);
+            this.dummyVisits[i] = new Visit(i, this.dummyPatients[i], this.symptoms[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
+                    2020, this.dummyDoctors[i], this.dummyExaminations[i], this.dummyMedicines[i], this.dummyNurses[i], this.dummyDiseases[i], this.dummyDoctors[i], this.dummyHospitalizations[i]);
         }
     }
 
@@ -126,9 +129,12 @@ public final class Generator {
         this.names = new String[]{"Bride", "Bella", "Elsie", "Queen", "Holle", "Maleen", "Witch", "Bee", "Rosette", "White",
             "Baba", "Charming", "Prince", "ThrushBeard", "Prince", "Dwarf", "Dwarf", "Dwarf", "Dwarf", "Dwarf"};
 
+        this.AMKAs = new int[]{00000000, 00000001, 00000010, 00000011, 00000100};
+
         this.specialties = new String[]{"Ειδικευόμενος", "Διευθυντής", "Επίκουρος_Διευθυντής", "Επιμελητής_Α", "Επιμελητής_Β"};
 
-        this.usernames = new String[]{"PIPIS", "PIPOS", "PIP", "POP", "PAP"};
+        this.usernames = new String[]{"PIPIS", "PIPOS", "PIP", "POP", "PAP", "AA", "sSS", "QQQ", "AD", "sdw",
+            "PIPI", "PIPO", "P", "PP", "PA", "A", "sS", "QQ", "A", "sw"};
         this.passwords = new String[]{"PIPIS111", "PIPOS112", "PIP121", "POP122", "PAP211"};
 
         this.streets = new String[]{"Campus", "Coach", "Steam", "Long", "Medieval"};
@@ -149,11 +155,13 @@ public final class Generator {
         this.months = new String[]{"Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβρης",
             "Οκτώβρης", "Νοέμβρης", "Δεκέμβρης"};
 
+        this.symptoms = new String[]{"Στομαχόπονος, διάρροια", "Πονοκέφαλος", "Πυρετός", "Βήχας", "Κόπωση"};
+
         this.dummyPatients = new Patient[5];
         this.dummyDoctors = new Doctor[5];
         this.dummyNurses = new Nurse[5];
         this.dummyAdmins = new AdminStaff[5];
-        this.dummyInfoSysUsers = new InfoSysUser[5];
+        this.dummyInfoSysUsers = new InfoSysUser[20];
         this.dummyDiseases = new Disease[5];
         this.dummyMedicines = new Medicine[5];
         this.dummyVigils = new Vigil[5];

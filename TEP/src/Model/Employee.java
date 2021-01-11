@@ -7,15 +7,21 @@ package Model;
 
 /**
  *
- * @author Stefito
+ * @author stefito
  */
-public class Nurse {
+public class Employee {
+    private final int ID;
     private final String surname;
     private final String name;
 
-    public Nurse(String surname, String name) {
+    public Employee(int ID, String surname, String name) {
+        this.ID = ID;
         this.surname = surname;
         this.name = name;
+    }
+
+    public int getID() {
+        return this.ID;
     }
 
     public String getSurname() {

@@ -10,9 +10,9 @@ package Model;
  * @author Stefito
  */
 public class Hospitalization {
+
     private final int ID;
-    private final String patientSurname;
-    private final String patientName;
+    private final Patient patient;
     private final String insertDay;
     private final String insertMonth;
     private final int insertYear;
@@ -20,10 +20,9 @@ public class Hospitalization {
     private final String exitMonth;
     private final int exitYear;
 
-    public Hospitalization(int ID, String patientSurname, String patientName, String insertDay, String insertMonth, int insertYear, String exitDay, String exitMonth, int exitYear) {
+    public Hospitalization(int ID, Patient patient, String insertDay, String insertMonth, int insertYear, String exitDay, String exitMonth, int exitYear) {
         this.ID = ID;
-        this.patientSurname = patientSurname;
-        this.patientName = patientName;
+        this.patient = patient;
         this.insertDay = insertDay;
         this.insertMonth = insertMonth;
         this.insertYear = insertYear;
@@ -36,12 +35,8 @@ public class Hospitalization {
         return this.ID;
     }
 
-    public String getPatientSurname() {
-        return this.patientSurname;
-    }
-
-    public String getPatientName() {
-        return this.patientName;
+    public Patient getPatient() {
+        return this.patient;
     }
 
     public String getInsertDay() {

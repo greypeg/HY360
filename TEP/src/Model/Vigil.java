@@ -10,26 +10,22 @@ package Model;
  * @author Stefito
  */
 public class Vigil {
-    private final String surname;
-    private final String name;
+
+    private final Employee employee;
     private final char type;
 
-    public Vigil(String surname, String name, char type) {
-        this.surname = surname;
-        this.name = name;
+    public Vigil(Employee employee, char type) {
+        this.employee = employee;
         this.type = type;
     }
 
-    public String getSurname() {
-        return this.surname;
-    }
-
-    public String getName() {
-        return this.name;
+    public Employee getEmployee() {
+        return this.employee;
     }
 
     public char getType() {
         return this.type;
     }
+
 
 }

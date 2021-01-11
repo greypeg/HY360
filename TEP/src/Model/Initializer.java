@@ -42,47 +42,44 @@ public final class Initializer {
         createTables[0] = "CREATE TABLE IF NOT EXISTS Ασθενείς ("
                 + "Επώνυμο VARCHAR(15), "
                 + "Όνομα VARCHAR(15), "
-                + "ΑΜΚΑ INT, "
+                + "ΑΜΚΑ INT PRIMARY KEY, "
                 + "Ασφαλιστικός_Φορέας VARCHAR(30), "
                 + "Τηλέφωνο VARCHAR(15), "
                 + "Οδός VARCHAR(15), "
                 + "Πόλη VARCHAR(10), "
-                + "Αριθμός INT, "
-                + "CONSTRAINT Ονοματεπώνυμο PRIMARY KEY(Επώνυμο, Όνομα)"
+                + "Αριθμός INT"
                 + ");";
 
         createTables[1] = "CREATE TABLE IF NOT EXISTS Γιατροί("
+                + "ID INT PRIMARY KEY, "
                 + "Επώνυμο VARCHAR(15), "
                 + "Όνομα VARCHAR(15), "
-                + "Ειδικότητα VARCHAR(20), "
-                + "CONSTRAINT Ονοματεπώνυμο PRIMARY KEY(Επώνυμο, Όνομα)"
+                + "Ειδικότητα VARCHAR(20)"
                 + ");";
 
         createTables[2] = "CREATE TABLE IF NOT EXISTS Νοσηλευτές("
+                + "ID INT PRIMARY KEY, "
                 + "Επώνυμο VARCHAR(15), "
-                + "Όνομα VARCHAR(15), "
-                + "CONSTRAINT Ονοματεπώνυμο PRIMARY KEY(Επώνυμο, Όνομα)"
+                + "Όνομα VARCHAR(15)"
                 + ");";
 
         createTables[3] = "CREATE TABLE IF NOT EXISTS Διοικητικό_Προσωπικό("
+                + "ID INT PRIMARY KEY, "
                 + "Επώνυμο VARCHAR(15), "
-                + "Όνομα VARCHAR(15), "
-                + "CONSTRAINT Ονοματεπώνυμο PRIMARY KEY(Επώνυμο, Όνομα)"
+                + "Όνομα VARCHAR(15)"
                 + ");";
 
         createTables[4] = "CREATE TABLE IF NOT EXISTS Χρήστες_Πληροφοριακού_Συστήματος("
                 + "Username VARCHAR(30), "
                 + "Password VARCHAR(40), "
-                + "Επώνυμο VARCHAR(15), "
-                + "Όνομα VARCHAR(15), "
+                + "ID_Υπαλλήλου INT, "
+                + "AMKA_Ασθενούς INT, "
                 + "CONSTRAINT Login PRIMARY KEY(Username, Password)"
                 + ");";
 
         createTables[5] = "CREATE TABLE IF NOT EXISTS Εφημερίες("
-                + "Επώνυμο VARCHAR(15), "
-                + "Όνομα VARCHAR(15), "
-                + "Τύπος CHAR(1), "
-                + "CONSTRAINT Ονοματεπώνυμο PRIMARY KEY(Επώνυμο, Όνομα)"
+                + "ID_Υπαλλήλου INT, "
+                + "Τύπος CHAR(1)"
                 + ");";
 
         createTables[6] = "CREATE TABLE IF NOT EXISTS Ασθένειες("
@@ -90,8 +87,7 @@ public final class Initializer {
                 + ");";
 
         createTables[7] = "CREATE TABLE IF NOT EXISTS Χρόνια_Νοσήματα("
-                + "Επώνυμο_Ασθενούς VARCHAR(15), "
-                + "Όνομα_Ασθενούς VARCHAR(15), "
+                + "AMKA_Ασθενούς INT, "
                 + "Όνομα_Ασθένειας VARCHAR(15)"
                 + ");";
 
@@ -108,8 +104,7 @@ public final class Initializer {
 
         createTables[10] = "CREATE TABLE IF NOT EXISTS Νοσηλείες("
                 + "ID INT PRIMARY KEY, "
-                + "Επώνυμο_Ασθενούς VARCHAR(15), "
-                + "Όνομα_Ασθενούς VARCHAR(15), "
+                + "AMKA_Ασθενούς INT, "
                 + "Ημέρα_Εισιτηρίου VARCHAR(10), "
                 + "Μήνας_Εισιτηρίου VARCHAR(10), "
                 + "Έτος_Εισιτηρίου INT, "
@@ -120,13 +115,17 @@ public final class Initializer {
 
         createTables[11] = "CREATE TABLE IF NOT EXISTS Επισκέψεις("
                 + "ID INT PRIMARY KEY, "
-                + "Επώνυμο_Ασθενούς VARCHAR(15), "
-                + "Όνομα_Ασθενούς VARCHAR(15), "
+                + "AMKA_Ασθενούς INT, "
+                + "Συμπτώματα_Ασθενούς VARCHAR(60), "
                 + "Ημέρα VARCHAR(10), "
                 + "Μήνας VARCHAR(10), "
                 + "Έτος INT, "
+                + "ID_Γιατρού_Εξέτασης INT, "
                 + "Τύπος_Εξέτασης VARCHAR(15), "
                 + "Όνομα_Φαρμάκου VARCHAR(30), "
+                + "ID_Νοσηλευτή_Εξέτασης INT, "
+                + "Όνομα_Ασθένειας VARCHAR(15), "
+                + "ID_Γιατρού_Επανεξέτασης INT, "
                 + "ID_Νοσηλείας INT"
                 + ");";
 
@@ -151,8 +150,12 @@ public final class Initializer {
             FillExaminationDummies(con, generator);
             FillHospitalizationDummies(con, generator);
             FillVisitDummies(con, generator);
-        } catch (SQLException e) {
-            throw e;
+        } catch (Exception e) {
+            if (e instanceof SQLException) {
+                throw e;
+            } else {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -181,13 +184,14 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Γιατροί;");
 
-        String sql = "INSERT INTO Γιατροί VALUES(?, ?, ?);";
+        String sql = "INSERT INTO Γιατροί VALUES(?, ?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setString(1, generator.getDummyDoctors()[i].getSurname());
-            stmt.setString(2, generator.getDummyDoctors()[i].getName());
-            stmt.setString(3, generator.getDummyDoctors()[i].getSpeciality());
+            stmt.setInt(1, generator.getDummyDoctors()[i].getID());
+            stmt.setString(2, generator.getDummyDoctors()[i].getSurname());
+            stmt.setString(3, generator.getDummyDoctors()[i].getName());
+            stmt.setString(4, generator.getDummyDoctors()[i].getSpeciality());
 
             stmt.executeUpdate();
         }
@@ -197,12 +201,13 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Νοσηλευτές;");
 
-        String sql = "INSERT INTO Νοσηλευτές VALUES(?, ?);";
+        String sql = "INSERT INTO Νοσηλευτές VALUES(?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setString(1, generator.getDummyNurses()[i].getSurname());
-            stmt.setString(2, generator.getDummyNurses()[i].getName());
+            stmt.setInt(1, generator.getDummyNurses()[i].getID());
+            stmt.setString(2, generator.getDummyNurses()[i].getSurname());
+            stmt.setString(3, generator.getDummyNurses()[i].getName());
 
             stmt.executeUpdate();
         }
@@ -212,12 +217,13 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Διοικητικό_Προσωπικό;");
 
-        String sql = "INSERT INTO Διοικητικό_Προσωπικό VALUES(?, ?);";
+        String sql = "INSERT INTO Διοικητικό_Προσωπικό VALUES(?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setString(1, generator.getDummyAdmins()[i].getSurname());
-            stmt.setString(2, generator.getDummyAdmins()[i].getName());
+            stmt.setInt(1, generator.getDummyAdmins()[i].getID());
+            stmt.setString(2, generator.getDummyAdmins()[i].getSurname());
+            stmt.setString(3, generator.getDummyAdmins()[i].getName());
 
             stmt.executeUpdate();
         }
@@ -248,7 +254,7 @@ public final class Initializer {
             stmt.setString(1, generator.getDummyMedicines()[i].getName());
             stmt.setString(2, generator.getDummyMedicines()[i].getType());
             stmt.setInt(3, generator.getDummyMedicines()[i].getActive_substance_content());
-            stmt.setString(4, generator.getDummyMedicines()[i].getIndicatedDisease());
+            stmt.setString(4, generator.getDummyMedicines()[i].getIndicatedDisease().getName());
 
             stmt.executeUpdate();
         }
@@ -261,11 +267,23 @@ public final class Initializer {
         String sql = "INSERT INTO Χρήστες_Πληροφοριακού_Συστήματος VALUES(?, ?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             stmt.setString(1, generator.getDummyInfoSysUsers()[i].getUsername());
             stmt.setString(2, generator.getDummyInfoSysUsers()[i].getPassword());
-            stmt.setString(3, generator.getDummyInfoSysUsers()[i].getSurname());
-            stmt.setString(4, generator.getDummyInfoSysUsers()[i].getName());
+
+            Employee employee = generator.getDummyInfoSysUsers()[i].getEmployee();
+            Patient patient = generator.getDummyInfoSysUsers()[i].getPatient();
+            if (employee == null) {
+                stmt.setNull(3, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(3, generator.getDummyInfoSysUsers()[i].getEmployee().getID());
+            }
+
+            if (patient == null) {
+                stmt.setNull(4, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(4, generator.getDummyInfoSysUsers()[i].getPatient().getAMKA());
+            }
 
             stmt.executeUpdate();
         }
@@ -275,13 +293,12 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Εφημερίες;");
 
-        String sql = "INSERT INTO Εφημερίες VALUES(?, ?, ?);";
+        String sql = "INSERT INTO Εφημερίες VALUES(?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setString(1, generator.getDummyVigils()[i].getSurname());
-            stmt.setString(2, generator.getDummyVigils()[i].getName());
-            stmt.setString(3, Character.toString(generator.getDummyVigils()[i].getType()));
+            stmt.setInt(1, generator.getDummyVigils()[i].getEmployee().getID());
+            stmt.setString(2, Character.toString(generator.getDummyVigils()[i].getType()));
 
             stmt.executeUpdate();
         }
@@ -291,13 +308,12 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Χρόνια_Νοσήματα;");
 
-        String sql = "INSERT INTO Χρόνια_Νοσήματα VALUES(?, ?, ?);";
+        String sql = "INSERT INTO Χρόνια_Νοσήματα VALUES(?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setString(1, generator.getDummyChronicDiseases()[i].getPatientSurname());
-            stmt.setString(2, generator.getDummyChronicDiseases()[i].getPatientName());
-            stmt.setString(3, generator.getDummyChronicDiseases()[i].getDiseaseName());
+            stmt.setInt(1, generator.getDummyChronicDiseases()[i].getPatient().getAMKA());
+            stmt.setString(2, generator.getDummyChronicDiseases()[i].getDisease().getName());
 
             stmt.executeUpdate();
         }
@@ -321,19 +337,18 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Νοσηλείες;");
 
-        String sql = "INSERT INTO Νοσηλείες VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO Νοσηλείες VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
             stmt.setInt(1, generator.getDummyHospitalizations()[i].getID());
-            stmt.setString(2, generator.getDummyHospitalizations()[i].getPatientSurname());
-            stmt.setString(3, generator.getDummyHospitalizations()[i].getPatientName());
-            stmt.setString(4, generator.getDummyHospitalizations()[i].getInsertDay());
-            stmt.setString(5, generator.getDummyHospitalizations()[i].getInsertMonth());
-            stmt.setInt(6, generator.getDummyHospitalizations()[i].getInsertYear());
-            stmt.setString(7, generator.getDummyHospitalizations()[i].getExitDay());
-            stmt.setString(8, generator.getDummyHospitalizations()[i].getExitMonth());
-            stmt.setInt(9, generator.getDummyHospitalizations()[i].getExitYear());
+            stmt.setInt(2, generator.getDummyHospitalizations()[i].getPatient().getAMKA());
+            stmt.setString(3, generator.getDummyHospitalizations()[i].getInsertDay());
+            stmt.setString(4, generator.getDummyHospitalizations()[i].getInsertMonth());
+            stmt.setInt(5, generator.getDummyHospitalizations()[i].getInsertYear());
+            stmt.setString(6, generator.getDummyHospitalizations()[i].getExitDay());
+            stmt.setString(7, generator.getDummyHospitalizations()[i].getExitMonth());
+            stmt.setInt(8, generator.getDummyHospitalizations()[i].getExitYear());
 
             stmt.executeUpdate();
         }
@@ -343,19 +358,23 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Επισκέψεις;");
 
-        String sql = "INSERT INTO Επισκέψεις VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO Επισκέψεις VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
             stmt.setInt(1, generator.getDummyVisits()[i].getID());
-            stmt.setString(2, generator.getDummyVisits()[i].getPatientSurname());
-            stmt.setString(3, generator.getDummyVisits()[i].getPatientName());
+            stmt.setInt(2, generator.getDummyVisits()[i].getPatient().getAMKA());
+            stmt.setString(3, generator.getDummyVisits()[i].getPatientSymptoms());
             stmt.setString(4, generator.getDummyVisits()[i].getDay());
             stmt.setString(5, generator.getDummyVisits()[i].getMonth());
             stmt.setInt(6, generator.getDummyVisits()[i].getYear());
-            stmt.setString(7, generator.getDummyVisits()[i].getExaminationType());
-            stmt.setString(8, generator.getDummyVisits()[i].getMedicineName());
-            stmt.setInt(9, generator.getDummyVisits()[i].getHospitalizationID());
+            stmt.setInt(7, generator.getDummyVisits()[i].getExaminationDoctor().getID());
+            stmt.setString(8, generator.getDummyVisits()[i].getExamination().getType());
+            stmt.setString(9, generator.getDummyVisits()[i].getMedicine().getName());
+            stmt.setInt(10, generator.getDummyVisits()[i].getExaminationNurse().getID());
+            stmt.setString(11, generator.getDummyVisits()[i].getDiagnosedDisease().getName());
+            stmt.setInt(12, generator.getDummyVisits()[i].getReexaminationDoctor().getID());
+            stmt.setInt(13, generator.getDummyVisits()[i].getHospitalization().getID());
 
             stmt.executeUpdate();
         }

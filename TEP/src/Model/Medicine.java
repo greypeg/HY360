@@ -13,9 +13,9 @@ public class Medicine {
     private final String Name;
     private final String type;
     private final int active_substance_content;
-    private final String indicatedDisease;
+    private final Disease indicatedDisease;
 
-    public Medicine(String Name, String type, int active_substance_content, String indicatedDisease) {
+    public Medicine(String Name, String type, int active_substance_content, Disease indicatedDisease) {
         this.Name = Name;
         this.type = type;
         this.active_substance_content = active_substance_content;
@@ -34,7 +34,7 @@ public class Medicine {
         return this.active_substance_content;
     }
 
-    public String getIndicatedDisease() {
+    public Disease getIndicatedDisease() {
         return this.indicatedDisease;
     }
 

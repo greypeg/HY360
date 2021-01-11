@@ -10,38 +10,47 @@ package Model;
  * @author Stefito
  */
 public class Visit {
+
     private final int ID;
-    private final String patientSurname;
-    private final String patientName;
+    private final Patient patient;
+    private final String patientSymptoms;
     private final String Day;
     private final String Month;
     private final int Year;
-    private final String examinationType;
-    private final String medicineName;
-    private final int HospitalizationID;
+    private final Doctor examinationDoctor;
+    private final Examination examination;
+    private final Medicine medicine;
+    private final Nurse examinationNurse;
+    private final Disease diagnosedDisease;
+    private final Doctor reexaminationDoctor;
+    private final Hospitalization hospitalization;
 
-    public Visit(int ID, String patientSurname, String patientName, String Day, String Month, int Year, String examinationType, String medicineName, int HospitalizationID) {
+    public Visit(int ID, Patient patient, String patientSymptoms, String Day, String Month, int Year, Doctor examinationDoctor, Examination examination, Medicine medicine, Nurse examinationNurse, Disease diagnosedDisease, Doctor reexaminationDoctor, Hospitalization hospitalization) {
         this.ID = ID;
-        this.patientSurname = patientSurname;
-        this.patientName = patientName;
+        this.patient = patient;
+        this.patientSymptoms = patientSymptoms;
         this.Day = Day;
         this.Month = Month;
         this.Year = Year;
-        this.examinationType = examinationType;
-        this.medicineName = medicineName;
-        this.HospitalizationID = HospitalizationID;
+        this.examinationDoctor = examinationDoctor;
+        this.examination = examination;
+        this.medicine = medicine;
+        this.examinationNurse = examinationNurse;
+        this.diagnosedDisease = diagnosedDisease;
+        this.reexaminationDoctor = reexaminationDoctor;
+        this.hospitalization = hospitalization;
     }
 
     public int getID() {
         return this.ID;
     }
 
-    public String getPatientSurname() {
-        return this.patientSurname;
+    public Patient getPatient() {
+        return this.patient;
     }
 
-    public String getPatientName() {
-        return this.patientName;
+    public String getPatientSymptoms() {
+        return this.patientSymptoms;
     }
 
     public String getDay() {
@@ -56,16 +65,32 @@ public class Visit {
         return this.Year;
     }
 
-    public String getExaminationType() {
-        return this.examinationType;
+    public Doctor getExaminationDoctor() {
+        return this.examinationDoctor;
     }
 
-    public String getMedicineName() {
-        return this.medicineName;
+    public Examination getExamination() {
+        return this.examination;
     }
 
-    public int getHospitalizationID() {
-        return this.HospitalizationID;
+    public Medicine getMedicine() {
+        return this.medicine;
+    }
+
+    public Nurse getExaminationNurse() {
+        return this.examinationNurse;
+    }
+
+    public Disease getDiagnosedDisease() {
+        return this.diagnosedDisease;
+    }
+
+    public Doctor getReexaminationDoctor() {
+        return this.reexaminationDoctor;
+    }
+
+    public Hospitalization getHospitalization() {
+        return this.hospitalization;
     }
 
 }
