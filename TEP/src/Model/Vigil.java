@@ -11,21 +11,20 @@ package Model;
  */
 public class Vigil {
 
-    private final Employee employee;
+    private final int employeeID;
     private final char type;
 
-    public Vigil(Employee employee, char type) {
-        this.employee = employee;
+    public Vigil(int employeeID, char type) {
+        this.employeeID = employeeID;
         this.type = type;
     }
 
-    public Employee getEmployee() {
-        return this.employee;
+    public int getEmployeeID() {
+        return this.employeeID;
     }
 
     public char getType() {
         return this.type;
     }
-
 
 }

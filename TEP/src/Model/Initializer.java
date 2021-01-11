@@ -254,7 +254,7 @@ public final class Initializer {
             stmt.setString(1, generator.getDummyMedicines()[i].getName());
             stmt.setString(2, generator.getDummyMedicines()[i].getType());
             stmt.setInt(3, generator.getDummyMedicines()[i].getActive_substance_content());
-            stmt.setString(4, generator.getDummyMedicines()[i].getIndicatedDisease().getName());
+            stmt.setString(4, generator.getDummyMedicines()[i].getIndicatedDisease());
 
             stmt.executeUpdate();
         }
@@ -271,19 +271,8 @@ public final class Initializer {
             stmt.setString(1, generator.getDummyInfoSysUsers()[i].getUsername());
             stmt.setString(2, generator.getDummyInfoSysUsers()[i].getPassword());
 
-            Employee employee = generator.getDummyInfoSysUsers()[i].getEmployee();
-            Patient patient = generator.getDummyInfoSysUsers()[i].getPatient();
-            if (employee == null) {
-                stmt.setNull(3, java.sql.Types.INTEGER);
-            } else {
-                stmt.setInt(3, generator.getDummyInfoSysUsers()[i].getEmployee().getID());
-            }
-
-            if (patient == null) {
-                stmt.setNull(4, java.sql.Types.INTEGER);
-            } else {
-                stmt.setInt(4, generator.getDummyInfoSysUsers()[i].getPatient().getAMKA());
-            }
+            stmt.setInt(3, generator.getDummyInfoSysUsers()[i].getEmployeeID());
+            stmt.setInt(4, generator.getDummyInfoSysUsers()[i].getPatientAMKA());
 
             stmt.executeUpdate();
         }
@@ -297,7 +286,7 @@ public final class Initializer {
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setInt(1, generator.getDummyVigils()[i].getEmployee().getID());
+            stmt.setInt(1, generator.getDummyVigils()[i].getEmployeeID());
             stmt.setString(2, Character.toString(generator.getDummyVigils()[i].getType()));
 
             stmt.executeUpdate();
@@ -312,8 +301,8 @@ public final class Initializer {
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setInt(1, generator.getDummyChronicDiseases()[i].getPatient().getAMKA());
-            stmt.setString(2, generator.getDummyChronicDiseases()[i].getDisease().getName());
+            stmt.setInt(1, generator.getDummyChronicDiseases()[i].getPatientAMKA());
+            stmt.setString(2, generator.getDummyChronicDiseases()[i].getDiseaseNAme());
 
             stmt.executeUpdate();
         }
@@ -342,7 +331,7 @@ public final class Initializer {
 
         for (int i = 0; i < 5; i++) {
             stmt.setInt(1, generator.getDummyHospitalizations()[i].getID());
-            stmt.setInt(2, generator.getDummyHospitalizations()[i].getPatient().getAMKA());
+            stmt.setInt(2, generator.getDummyHospitalizations()[i].getPatientAMKA());
             stmt.setString(3, generator.getDummyHospitalizations()[i].getInsertDay());
             stmt.setString(4, generator.getDummyHospitalizations()[i].getInsertMonth());
             stmt.setInt(5, generator.getDummyHospitalizations()[i].getInsertYear());
@@ -363,18 +352,18 @@ public final class Initializer {
 
         for (int i = 0; i < 5; i++) {
             stmt.setInt(1, generator.getDummyVisits()[i].getID());
-            stmt.setInt(2, generator.getDummyVisits()[i].getPatient().getAMKA());
+            stmt.setInt(2, generator.getDummyVisits()[i].getPatientAMKA());
             stmt.setString(3, generator.getDummyVisits()[i].getPatientSymptoms());
             stmt.setString(4, generator.getDummyVisits()[i].getDay());
             stmt.setString(5, generator.getDummyVisits()[i].getMonth());
             stmt.setInt(6, generator.getDummyVisits()[i].getYear());
-            stmt.setInt(7, generator.getDummyVisits()[i].getExaminationDoctor().getID());
-            stmt.setString(8, generator.getDummyVisits()[i].getExamination().getType());
-            stmt.setString(9, generator.getDummyVisits()[i].getMedicine().getName());
-            stmt.setInt(10, generator.getDummyVisits()[i].getExaminationNurse().getID());
-            stmt.setString(11, generator.getDummyVisits()[i].getDiagnosedDisease().getName());
-            stmt.setInt(12, generator.getDummyVisits()[i].getReexaminationDoctor().getID());
-            stmt.setInt(13, generator.getDummyVisits()[i].getHospitalization().getID());
+            stmt.setInt(7, generator.getDummyVisits()[i].getExaminationDoctorID());
+            stmt.setString(8, generator.getDummyVisits()[i].getExaminationType());
+            stmt.setString(9, generator.getDummyVisits()[i].getMedicineName());
+            stmt.setInt(10, generator.getDummyVisits()[i].getExaminationNurseID());
+            stmt.setString(11, generator.getDummyVisits()[i].getDiagnosedDisease());
+            stmt.setInt(12, generator.getDummyVisits()[i].getReexaminationDoctorID());
+            stmt.setInt(13, generator.getDummyVisits()[i].getHospitalizationID());
 
             stmt.executeUpdate();
         }

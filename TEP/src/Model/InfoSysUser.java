@@ -13,14 +13,14 @@ public class InfoSysUser {
 
     private final String username;
     private final String password;
-    private final Employee employee;
-    private final Patient patient;
+    private final int employeeID;
+    private final int patientAMKA;
 
-    public InfoSysUser(String username, String password, Employee employee, Patient patient) {
+    public InfoSysUser(String username, String password, int employeeID, int patientAMKA) {
         this.username = username;
         this.password = password;
-        this.employee = employee;
-        this.patient = patient;
+        this.employeeID = employeeID;
+        this.patientAMKA = patientAMKA;
     }
 
     public String getUsername() {
@@ -31,12 +31,12 @@ public class InfoSysUser {
         return this.password;
     }
 
-    public Employee getEmployee() {
-        return this.employee;
+    public int getEmployeeID() {
+        return this.employeeID;
     }
 
-    public Patient getPatient() {
-        return this.patient;
+    public int getPatientAMKA() {
+        return this.patientAMKA;
     }
 
 }

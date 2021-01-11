@@ -12,41 +12,41 @@ package Model;
 public class Visit {
 
     private final int ID;
-    private final Patient patient;
+    private final int patientAMKA;
     private final String patientSymptoms;
     private final String Day;
     private final String Month;
     private final int Year;
-    private final Doctor examinationDoctor;
-    private final Examination examination;
-    private final Medicine medicine;
-    private final Nurse examinationNurse;
-    private final Disease diagnosedDisease;
-    private final Doctor reexaminationDoctor;
-    private final Hospitalization hospitalization;
+    private final int examinationDoctorID;
+    private final String examinationType;
+    private final String medicineName;
+    private final int examinationNurseID;
+    private final String diagnosedDisease;
+    private final int reexaminationDoctorID;
+    private final int hospitalizationID;
 
-    public Visit(int ID, Patient patient, String patientSymptoms, String Day, String Month, int Year, Doctor examinationDoctor, Examination examination, Medicine medicine, Nurse examinationNurse, Disease diagnosedDisease, Doctor reexaminationDoctor, Hospitalization hospitalization) {
+    public Visit(int ID, int patientAMKA, String patientSymptoms, String Day, String Month, int Year, int examinationDoctorID, String examinationType, String medicineName, int examinationNurseID, String diagnosedDisease, int reexaminationDoctorID, int hospitalizationID) {
         this.ID = ID;
-        this.patient = patient;
+        this.patientAMKA = patientAMKA;
         this.patientSymptoms = patientSymptoms;
         this.Day = Day;
         this.Month = Month;
         this.Year = Year;
-        this.examinationDoctor = examinationDoctor;
-        this.examination = examination;
-        this.medicine = medicine;
-        this.examinationNurse = examinationNurse;
+        this.examinationDoctorID = examinationDoctorID;
+        this.examinationType = examinationType;
+        this.medicineName = medicineName;
+        this.examinationNurseID = examinationNurseID;
         this.diagnosedDisease = diagnosedDisease;
-        this.reexaminationDoctor = reexaminationDoctor;
-        this.hospitalization = hospitalization;
+        this.reexaminationDoctorID = reexaminationDoctorID;
+        this.hospitalizationID = hospitalizationID;
     }
 
     public int getID() {
         return this.ID;
     }
 
-    public Patient getPatient() {
-        return this.patient;
+    public int getPatientAMKA() {
+        return this.patientAMKA;
     }
 
     public String getPatientSymptoms() {
@@ -65,32 +65,33 @@ public class Visit {
         return this.Year;
     }
 
-    public Doctor getExaminationDoctor() {
-        return this.examinationDoctor;
+    public int getExaminationDoctorID() {
+        return this.examinationDoctorID;
     }
 
-    public Examination getExamination() {
-        return this.examination;
+    public String getExaminationType() {
+        return this.examinationType;
     }
 
-    public Medicine getMedicine() {
-        return this.medicine;
+    public String getMedicineName() {
+        return this.medicineName;
     }
 
-    public Nurse getExaminationNurse() {
-        return this.examinationNurse;
+    public int getExaminationNurseID() {
+        return this.examinationNurseID;
     }
 
-    public Disease getDiagnosedDisease() {
+    public String getDiagnosedDisease() {
         return this.diagnosedDisease;
     }
 
-    public Doctor getReexaminationDoctor() {
-        return this.reexaminationDoctor;
+    public int getReexaminationDoctorID() {
+        return this.reexaminationDoctorID;
     }
 
-    public Hospitalization getHospitalization() {
-        return this.hospitalization;
+    public int getHospitalizationID() {
+        return this.hospitalizationID;
     }
+
 
 }

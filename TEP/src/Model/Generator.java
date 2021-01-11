@@ -65,44 +65,44 @@ public final class Generator {
             this.dummyPatients[i] = new Patient(this.surnames[j], this.names[j], this.AMKAs[i],
                     "Κανένας", "69" + String.valueOf(get8DigitNum()), this.streets[i], this.cities[i], this.numbers[i]);
 
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], null, this.dummyPatients[i]);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], -1, this.dummyPatients[i].getAMKA());
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
             this.dummyDoctors[i] = new Doctor(j, this.surnames[j], this.names[j], this.specialties[i]);
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyDoctors[i], null);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyDoctors[i].getID(), -1);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
             this.dummyNurses[i] = new Nurse(j, this.surnames[j], this.names[j]);
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyNurses[i], null);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyNurses[i].getID(), -1);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
             this.dummyAdmins[i] = new AdminStaff(j, this.surnames[j], this.names[j]);
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyAdmins[i], null);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyAdmins[i].getID(), -1);
             j++;
         }
 
-        this.dummyVigils[0] = new Vigil(this.dummyDoctors[0], this.vigilTypes[0]);
-        this.dummyVigils[1] = new Vigil(this.dummyDoctors[1], this.vigilTypes[1]);
-        this.dummyVigils[2] = new Vigil(this.dummyDoctors[2], this.vigilTypes[2]);
-        this.dummyVigils[3] = new Vigil(this.dummyNurses[0], this.vigilTypes[0]);
-        this.dummyVigils[4] = new Vigil(this.dummyAdmins[0], this.vigilTypes[0]);
+        this.dummyVigils[0] = new Vigil(this.dummyDoctors[0].getID(), this.vigilTypes[0]);
+        this.dummyVigils[1] = new Vigil(this.dummyDoctors[1].getID(), this.vigilTypes[1]);
+        this.dummyVigils[2] = new Vigil(this.dummyDoctors[2].getID(), this.vigilTypes[2]);
+        this.dummyVigils[3] = new Vigil(this.dummyNurses[0].getID(), this.vigilTypes[0]);
+        this.dummyVigils[4] = new Vigil(this.dummyAdmins[0].getID(), this.vigilTypes[0]);
 
         for (int i = 0; i < 5; i++) {
             this.dummyDiseases[i] = new Disease(this.diseasesNames[i]);
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyChronicDiseases[i] = new ChronicDisease(this.dummyPatients[i], this.dummyDiseases[i]);
+            this.dummyChronicDiseases[i] = new ChronicDisease(this.dummyPatients[i].getAMKA(), this.dummyDiseases[i].getName());
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyMedicines[i] = new Medicine(this.medicineNames[i], this.medicineTypes[i], this.medicineASCs[i], this.dummyDiseases[i]);
+            this.dummyMedicines[i] = new Medicine(this.medicineNames[i], this.medicineTypes[i], this.medicineASCs[i], this.dummyDiseases[i].getName());
         }
 
         for (int i = 0; i < 5; i++) {
@@ -110,13 +110,15 @@ public final class Generator {
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyHospitalizations[i] = new Hospitalization(i, this.dummyPatients[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
+            this.dummyHospitalizations[i] = new Hospitalization(i, this.dummyPatients[i].getAMKA(), this.days[(i * 2) % 7], this.months[(i * 2) % 12],
                     2020, this.days[(i * 5) % 7], this.months[(i * 5) % 12], 2021);
         }
 
         for (int i = 0; i < 5; i++) {
-            this.dummyVisits[i] = new Visit(i, this.dummyPatients[i], this.symptoms[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
-                    2020, this.dummyDoctors[i], this.dummyExaminations[i], this.dummyMedicines[i], this.dummyNurses[i], this.dummyDiseases[i], this.dummyDoctors[i], this.dummyHospitalizations[i]);
+            this.dummyVisits[i] = new Visit(i, this.dummyPatients[i].getAMKA(), this.symptoms[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
+                    2020, this.dummyDoctors[i].getID(), this.dummyExaminations[i].getType(), this.dummyMedicines[i].getName(),
+                    this.dummyNurses[i].getID(), this.dummyDiseases[i].getName(), this.dummyDoctors[i].getID(),
+                    this.dummyHospitalizations[i].getID());
         }
     }
 
@@ -129,7 +131,7 @@ public final class Generator {
         this.names = new String[]{"Bride", "Bella", "Elsie", "Queen", "Holle", "Maleen", "Witch", "Bee", "Rosette", "White",
             "Baba", "Charming", "Prince", "ThrushBeard", "Prince", "Dwarf", "Dwarf", "Dwarf", "Dwarf", "Dwarf"};
 
-        this.AMKAs = new int[]{00000000, 00000001, 00000010, 00000011, 00000100};
+        this.AMKAs = new int[]{123456, 123457, 123458, 123459, 123450};
 
         this.specialties = new String[]{"Ειδικευόμενος", "Διευθυντής", "Επίκουρος_Διευθυντής", "Επιμελητής_Α", "Επιμελητής_Β"};
 
