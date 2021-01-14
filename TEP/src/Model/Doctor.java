@@ -9,17 +9,34 @@ package Model;
  *
  * @author Stefito
  */
-public class Doctor extends Employee {
-
+public class Doctor {
+    private final int ID;
+    private final String surname;
+    private final String name;
     private final String speciality;
 
     public Doctor(int ID, String surname, String name, String speciality) {
-        super(ID, surname, name);
+        this.ID = ID;
+        this.surname = surname;
+        this.name = name;
         this.speciality = speciality;
     }
 
     public String getSpeciality() {
         return this.speciality;
     }
+
+    public int getID() {
+        return this.ID;
+    }
+
+    public String getSurname() {
+        return this.surname;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
 
 }

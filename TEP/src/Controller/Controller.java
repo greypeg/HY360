@@ -12,8 +12,7 @@ import Model.Initializer;
  * @author Stefito
  */
 public class Controller {
-
-    public static void main(String[] args) {
+    public Controller() {
         Initializer in = new Initializer("τεπ");
     }
 }
