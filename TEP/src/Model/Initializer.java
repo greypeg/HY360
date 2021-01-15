@@ -60,6 +60,7 @@ public final class Initializer {
                 + ");";
 
         createTables[5] = "CREATE TABLE IF NOT EXISTS Εφημερίες("
+                + "ID INT, "
                 + "ID_Υπαλλήλου INT, "
                 + "Τύπος CHAR(1)"
                 + ");";
@@ -87,11 +88,11 @@ public final class Initializer {
         createTables[10] = "CREATE TABLE IF NOT EXISTS Νοσηλείες("
                 + "ID INT PRIMARY KEY, "
                 + "AMKA_Ασθενούς INT, "
-                + "Ημέρα_Εισιτηρίου VARCHAR(10), "
-                + "Μήνας_Εισιτηρίου VARCHAR(10), "
+                + "Ημέρα_Εισιτηρίου INT, "
+                + "Μήνας_Εισιτηρίου INT, "
                 + "Έτος_Εισιτηρίου INT, "
-                + "Ημέρα_Εξιτηρίου VARCHAR(10), "
-                + "Μήνας_Εξιτηρίου VARCHAR(10), "
+                + "Ημέρα_Εξιτηρίου INT, "
+                + "Μήνας_Εξιτηρίου INT, "
                 + "Έτος_Εξιτηρίου INT"
                 + ");";
 
@@ -99,9 +100,10 @@ public final class Initializer {
                 + "ID INT PRIMARY KEY, "
                 + "AMKA_Ασθενούς INT, "
                 + "Συμπτώματα_Ασθενούς VARCHAR(60), "
-                + "Ημέρα VARCHAR(10), "
-                + "Μήνας VARCHAR(10), "
+                + "Ημέρα INT, "
+                + "Μήνας INT, "
                 + "Έτος INT, "
+                + "ID_Εφημερίας INT, "
                 + "ID_Γιατρού_Εξέτασης INT, "
                 + "Τύπος_Εξέτασης VARCHAR(15), "
                 + "Όνομα_Φαρμάκου VARCHAR(30), "
@@ -254,12 +256,13 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Εφημερίες;");
 
-        String sql = "INSERT INTO Εφημερίες VALUES(?, ?);";
+        String sql = "INSERT INTO Εφημερίες VALUES(?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
-        for (int i = 0; i < 5; i++) {
-            stmt.setInt(1, generator.getDummyVigils()[i].getEmployeeID());
-            stmt.setString(2, Character.toString(generator.getDummyVigils()[i].getType()));
+        for (int i = 0; i < 10; i++) {
+            stmt.setInt(1, generator.getDummyVigils()[i].getID());
+            stmt.setInt(2, generator.getDummyVigils()[i].getEmployeeID());
+            stmt.setString(3, Character.toString(generator.getDummyVigils()[i].getType()));
 
             stmt.executeUpdate();
         }
@@ -304,11 +307,11 @@ public final class Initializer {
         for (int i = 0; i < 5; i++) {
             stmt.setInt(1, generator.getDummyHospitalizations()[i].getID());
             stmt.setInt(2, generator.getDummyHospitalizations()[i].getPatientAMKA());
-            stmt.setString(3, generator.getDummyHospitalizations()[i].getInsertDay());
-            stmt.setString(4, generator.getDummyHospitalizations()[i].getInsertMonth());
+            stmt.setInt(3, generator.getDummyHospitalizations()[i].getInsertDay());
+            stmt.setInt(4, generator.getDummyHospitalizations()[i].getInsertMonth());
             stmt.setInt(5, generator.getDummyHospitalizations()[i].getInsertYear());
-            stmt.setString(6, generator.getDummyHospitalizations()[i].getExitDay());
-            stmt.setString(7, generator.getDummyHospitalizations()[i].getExitMonth());
+            stmt.setInt(6, generator.getDummyHospitalizations()[i].getExitDay());
+            stmt.setInt(7, generator.getDummyHospitalizations()[i].getExitMonth());
             stmt.setInt(8, generator.getDummyHospitalizations()[i].getExitYear());
 
             stmt.executeUpdate();
@@ -319,23 +322,24 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Επισκέψεις;");
 
-        String sql = "INSERT INTO Επισκέψεις VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO Επισκέψεις VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
             stmt.setInt(1, generator.getDummyVisits()[i].getID());
             stmt.setInt(2, generator.getDummyVisits()[i].getPatientAMKA());
             stmt.setString(3, generator.getDummyVisits()[i].getPatientSymptoms());
-            stmt.setString(4, generator.getDummyVisits()[i].getDay());
-            stmt.setString(5, generator.getDummyVisits()[i].getMonth());
+            stmt.setInt(4, generator.getDummyVisits()[i].getDay());
+            stmt.setInt(5, generator.getDummyVisits()[i].getMonth());
             stmt.setInt(6, generator.getDummyVisits()[i].getYear());
-            stmt.setInt(7, generator.getDummyVisits()[i].getExaminationDoctorID());
-            stmt.setString(8, generator.getDummyVisits()[i].getExaminationType());
-            stmt.setString(9, generator.getDummyVisits()[i].getMedicineName());
-            stmt.setInt(10, generator.getDummyVisits()[i].getExaminationNurseID());
-            stmt.setString(11, generator.getDummyVisits()[i].getDiagnosedDisease());
-            stmt.setInt(12, generator.getDummyVisits()[i].getReexaminationDoctorID());
-            stmt.setInt(13, generator.getDummyVisits()[i].getHospitalizationID());
+            stmt.setInt(7, generator.getDummyVisits()[i].getVigilID());
+            stmt.setInt(8, generator.getDummyVisits()[i].getExaminationDoctorID());
+            stmt.setString(9, generator.getDummyVisits()[i].getExaminationType());
+            stmt.setString(10, generator.getDummyVisits()[i].getMedicineName());
+            stmt.setInt(11, generator.getDummyVisits()[i].getExaminationNurseID());
+            stmt.setString(12, generator.getDummyVisits()[i].getDiagnosedDisease());
+            stmt.setInt(13, generator.getDummyVisits()[i].getReexaminationDoctorID());
+            stmt.setInt(14, generator.getDummyVisits()[i].getHospitalizationID());
 
             stmt.executeUpdate();
         }

@@ -15,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.Random;
 
 /**
@@ -32,12 +31,27 @@ public class Controller {
 
     private int examinationDoctorID;
 
-    private int[] getVigilIDs() throws SQLException {
-        int[] IDs = new int[5];
+    private int getVigilID() throws SQLException {
+        int vigilID = -1;
 
         Statement stmt = this.con.createStatement();
+        String query = "SELECT MAX(ID) FROM Εφημερίες;";
 
-        String query = "SELECT ID_Υπαλλήλου FROM Εφημερίες;";
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            vigilID = rs.getInt(1);
+        }
+
+        return vigilID;
+    }
+
+    private int[] getVigilIEmployeesIDs(int vigilID) throws SQLException {
+        int[] IDs = new int[5];
+
+        String query = "SELECT ID_Υπαλλήλου FROM Εφημερίες WHERE ID = (SELECT MAX(ID) FROM Εφημερίες);";
+        PreparedStatement stmt = this.con.prepareStatement(query);
+
         ResultSet rs = stmt.executeQuery(query);
 
         int i = 0;
@@ -49,15 +63,13 @@ public class Controller {
     }
 
     private void updateVigils() throws SQLException {
-        Statement st = this.con.createStatement();
-        st.executeUpdate("TRUNCATE TABLE Εφημερίες;");
-
-        String sql = "INSERT INTO Εφημερίες VALUES(?, ?);";
+        String sql = "INSERT INTO Εφημερίες VALUES(?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setInt(1, this.vigils[i].getEmployeeID());
-            stmt.setString(2, Character.toString(this.vigils[i].getType()));
+            stmt.setInt(1, this.vigils[i].getID());
+            stmt.setInt(2, this.vigils[i].getEmployeeID());
+            stmt.setString(3, Character.toString(this.vigils[i].getType()));
 
             stmt.executeUpdate();
         }
@@ -77,21 +89,53 @@ public class Controller {
         return lastVisitID;
     }
 
+    private int getLastHospitalizationID() throws SQLException {
+        int lastHospitalization = -1;
+
+        Statement stmt = this.con.createStatement();
+
+        String query = "SELECT ID FROM Νοσηλείες ORDER BY ID DESC LIMIT 1;";
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            lastHospitalization = rs.getInt("ID");
+        }
+
+        return lastHospitalization;
+    }
+
+    private void hospitalizePatient(int hospitalizationID, int AMKA) throws SQLException {
+        String sql = "INSERT INTO Νοσηλείες VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement stmt = con.prepareStatement(sql);
+
+        stmt.setInt(1, hospitalizationID);
+        stmt.setInt(2, AMKA);
+        stmt.setInt(3, generator.getNow().getDayOfMonth());
+        stmt.setInt(4, generator.getNow().getMonthValue());
+        stmt.setInt(5, generator.getNow().getYear());
+        stmt.setInt(6, generator.getNow().getDayOfMonth());
+        stmt.setInt(7, generator.getNow().getMonthValue());
+        stmt.setInt(8, generator.getNow().getYear() + 1);
+
+        stmt.executeUpdate();
+    }
+
     private void createExaminationFromDoctor() throws SQLException {
-        String sql = "INSERT INTO Επισκέψεις(ID, AMKA_Ασθενούς, Συμπτώματα_Ασθενούς, Ημέρα, Μήνας, Έτος, ID_Γιατρού_Εξέτασης,"
-                + "Τύπος_Εξέτασης, Όνομα_Φαρμάκου) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO Επισκέψεις(ID, AMKA_Ασθενούς, Συμπτώματα_Ασθενούς, Ημέρα, Μήνας, Έτος, ID_Εφημερίας,"
+                + " ID_Γιατρού_Εξέτασης, Τύπος_Εξέτασης, Όνομα_Φαρμάκου) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         PreparedStatement stmt = this.con.prepareStatement(sql);
 
         stmt.setInt(1, this.visit.getID());
         stmt.setInt(2, this.visit.getPatientAMKA());
         stmt.setString(3, this.visit.getPatientSymptoms());
-        stmt.setString(4, this.visit.getDay());
-        stmt.setString(5, this.visit.getMonth());
+        stmt.setInt(4, this.visit.getDay());
+        stmt.setInt(5, this.visit.getMonth());
         stmt.setInt(6, this.visit.getYear());
-        stmt.setInt(7, this.visit.getExaminationDoctorID());
-        stmt.setString(8, this.visit.getExaminationType());
-        stmt.setString(9, this.visit.getMedicineName());
+        stmt.setInt(7, this.visit.getVigilID());
+        stmt.setInt(8, this.visit.getExaminationDoctorID());
+        stmt.setString(9, this.visit.getExaminationType());
+        stmt.setString(10, this.visit.getMedicineName());
 
         stmt.executeUpdate();
     }
@@ -138,7 +182,9 @@ public class Controller {
     private void initializeVigils() {
         this.vigils = new Vigil[5];
 
-        System.arraycopy(this.generator.getDummyVigils(), 0, this.vigils, 0, 5);
+        for (int i = 0; i < 5; i++) {
+            this.vigils[i] = this.generator.getDummyVigils()[i + 5];
+        }
     }
 
     public Controller(String DBName) throws ClassNotFoundException, SQLException {
@@ -150,22 +196,25 @@ public class Controller {
     }
 
     public void setVigils() throws SQLException {
-        int[] IDs = getVigilIDs();
-        int[] newIDs = new int[5];
-        int i;
+        int vigilID = getVigilID();
+        int[] EmployeesIDs = getVigilIEmployeesIDs(vigilID);
 
+        int[] newIDs = new int[5];
+        int newVigilID = vigilID + 1;
+
+        int i;
         for (i = 0; i < 2; i++) {
-            newIDs[i] = (((IDs[i] + 2) % 10) % 5) + 5;
+            newIDs[i] = (((EmployeesIDs[i] + 2) % 10) % 5) + 5;
         }
 
         for (; i < 4; i++) {
-            newIDs[i] = (((IDs[i] + 2) % 10) % 5) + 10;
+            newIDs[i] = (((EmployeesIDs[i] + 2) % 10) % 5) + 10;
         }
 
-        newIDs[4] = (((IDs[4] + 2) % 10) % 5) + 15;
+        newIDs[4] = (((EmployeesIDs[4] + 2) % 10) % 5) + 15;
 
         for (int j = 0; j < 5; j++) {
-            this.vigils[j] = new Vigil(newIDs[j], this.generator.getDummyVigils()[j].getType());
+            this.vigils[j] = new Vigil(newVigilID, newIDs[j], this.generator.getDummyVigils()[j].getType());
         }
 
         updateVigils();
@@ -184,11 +233,10 @@ public class Controller {
         rnd = new Random().nextInt(5);
         String medicineName = this.generator.getDummyMedicines()[rnd].getName();
 
-        LocalDateTime now = LocalDateTime.now();
         /* DO in View */
-        this.visit = new Visit(visitID, AMKA, symptoms, Integer.toString(now.getDayOfMonth()),
-                Integer.toString(now.getMonthValue()), now.getYear(), this.examinationDoctorID, examinationType,
-                medicineName, -1, "-1", -1, -1);
+        this.visit = new Visit(visitID, AMKA, symptoms, this.generator.getNow().getDayOfMonth(),
+                this.generator.getNow().getMonthValue(), this.generator.getNow().getYear(), this.vigils[0].getID(),
+                this.examinationDoctorID, examinationType, medicineName, -1, "-1", -1, -1);
 
         createExaminationFromDoctor();
     }
@@ -207,11 +255,18 @@ public class Controller {
     }
 
     public void takeReExaminationFromDoctor(int AMKA) throws SQLException {
-        int rnd = new Random().nextInt(5);
-        int hospitalizationID = this.generator.getDummyHospitalizations()[rnd].getID();
+        int rnd = new Random().nextInt(2);
+        int hospitalizationID;
+        int newHospitalizationID = -1;
+        /* 50 - 50 */
+        if (rnd == 1) {
+            hospitalizationID = getLastHospitalizationID();
+            newHospitalizationID = hospitalizationID + 1;
+            hospitalizePatient(newHospitalizationID, AMKA);
+        }
 
         this.visit.setReExaminationDoctorID(this.examinationDoctorID);
-        this.visit.setHospitalizationID(hospitalizationID);
+        this.visit.setHospitalizationID(newHospitalizationID);
 
         createReExaminationFromDoctor();
     }
@@ -224,7 +279,6 @@ public class Controller {
 //    public String getVisitsStateAtTheEndOfVigil() {
 //
 //    }
-
 //    public String getStatsPerVigil() {
 //
 //    }

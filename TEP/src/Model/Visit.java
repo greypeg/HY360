@@ -14,9 +14,10 @@ public class Visit {
     private final int ID;
     private final int patientAMKA;
     private final String patientSymptoms;
-    private final String Day;
-    private final String Month;
+    private final int Day;
+    private final int Month;
     private final int Year;
+    private final int vigilID;
     private final int examinationDoctorID;
     private final String examinationType;
     private final String medicineName;
@@ -25,13 +26,16 @@ public class Visit {
     private int reexaminationDoctorID;
     private int hospitalizationID;
 
-    public Visit(int ID, int patientAMKA, String patientSymptoms, String Day, String Month, int Year, int examinationDoctorID, String examinationType, String medicineName, int examinationNurseID, String diagnosedDisease, int reexaminationDoctorID, int hospitalizationID) {
+    public Visit(int ID, int patientAMKA, String patientSymptoms, int Day, int Month, int Year, int vigilID,
+            int examinationDoctorID, String examinationType, String medicineName, int examinationNurseID,
+            String diagnosedDisease, int reexaminationDoctorID, int hospitalizationID) {
         this.ID = ID;
         this.patientAMKA = patientAMKA;
         this.patientSymptoms = patientSymptoms;
         this.Day = Day;
         this.Month = Month;
         this.Year = Year;
+        this.vigilID = vigilID;
         this.examinationDoctorID = examinationDoctorID;
         this.examinationType = examinationType;
         this.medicineName = medicineName;
@@ -53,16 +57,20 @@ public class Visit {
         return this.patientSymptoms;
     }
 
-    public String getDay() {
+    public int getDay() {
         return this.Day;
     }
 
-    public String getMonth() {
+    public int getMonth() {
         return this.Month;
     }
 
     public int getYear() {
         return this.Year;
+    }
+
+    public int getVigilID() {
+        return this.vigilID;
     }
 
     public int getExaminationDoctorID() {
