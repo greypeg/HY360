@@ -5,6 +5,7 @@
  */
 package Model;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 /**
@@ -25,6 +26,7 @@ public final class Generator {
     private final String[] streets;
     private final String[] cities;
     private final int[] numbers;
+    private final String[] symptoms;
 
     private final char[] vigilTypes;
 
@@ -35,11 +37,6 @@ public final class Generator {
     private final String[] medicineNames;
     private final String[] medicineTypes;
     private final int[] medicineASCs;
-
-    private final String[] days;
-    private final String[] months;
-
-    private final String[] symptoms;
 
     private final Patient[] dummyPatients;
     private final Doctor[] dummyDoctors;
@@ -53,6 +50,8 @@ public final class Generator {
     private final Examination[] dummyExaminations;
     private final Hospitalization[] dummyHospitalizations;
     private final Visit[] dummyVisits;
+
+    private LocalDateTime now;
 
     private int get8DigitNum() {
         return this.rand.nextInt(99999999);
@@ -87,11 +86,16 @@ public final class Generator {
             j++;
         }
 
-        this.dummyVigils[0] = new Vigil(this.dummyDoctors[0].getID(), this.vigilTypes[0]);
-        this.dummyVigils[1] = new Vigil(this.dummyDoctors[1].getID(), this.vigilTypes[1]);
-        this.dummyVigils[2] = new Vigil(this.dummyNurses[1].getID(), this.vigilTypes[2]);
-        this.dummyVigils[3] = new Vigil(this.dummyNurses[0].getID(), this.vigilTypes[0]);
-        this.dummyVigils[4] = new Vigil(this.dummyAdmins[0].getID(), this.vigilTypes[0]);
+        this.dummyVigils[0] = new Vigil(0, this.dummyDoctors[0].getID(), this.vigilTypes[0]);
+        this.dummyVigils[1] = new Vigil(0, this.dummyDoctors[1].getID(), this.vigilTypes[1]);
+        this.dummyVigils[2] = new Vigil(0, this.dummyNurses[1].getID(), this.vigilTypes[2]);
+        this.dummyVigils[3] = new Vigil(0, this.dummyNurses[0].getID(), this.vigilTypes[0]);
+        this.dummyVigils[4] = new Vigil(0, this.dummyAdmins[0].getID(), this.vigilTypes[0]);
+        this.dummyVigils[5] = new Vigil(1, this.dummyDoctors[2].getID(), this.vigilTypes[0]);
+        this.dummyVigils[6] = new Vigil(1, this.dummyDoctors[3].getID(), this.vigilTypes[1]);
+        this.dummyVigils[7] = new Vigil(1, this.dummyNurses[2].getID(), this.vigilTypes[2]);
+        this.dummyVigils[8] = new Vigil(1, this.dummyNurses[3].getID(), this.vigilTypes[0]);
+        this.dummyVigils[9] = new Vigil(1, this.dummyAdmins[1].getID(), this.vigilTypes[0]);
 
         for (int i = 0; i < 5; i++) {
             this.dummyDiseases[i] = new Disease(this.diseasesNames[i]);
@@ -108,17 +112,32 @@ public final class Generator {
         for (int i = 0; i < 5; i++) {
             this.dummyExaminations[i] = new Examination(this.examinationTypes[i]);
         }
+        int i;
 
-        for (int i = 0; i < 5; i++) {
-            this.dummyHospitalizations[i] = new Hospitalization(i, this.dummyPatients[i].getAMKA(), this.days[(i * 2) % 7], this.months[(i * 2) % 12],
-                    2020, this.days[(i * 5) % 7], this.months[(i * 5) % 12], 2021);
+        for (i = 0; i < 3; i++) {
+            this.dummyHospitalizations[i] = new Hospitalization(i, this.dummyPatients[i].getAMKA(), this.now.getDayOfMonth() - 1,
+                    this.now.getMonthValue(), this.now.getYear(), this.now.getDayOfMonth() + i, this.now.getMonthValue() + i,
+                    this.now.getYear());
         }
 
-        for (int i = 0; i < 5; i++) {
-            this.dummyVisits[i] = new Visit(i, this.dummyPatients[i].getAMKA(), this.symptoms[i], this.days[(i * 2) % 7], this.months[(i * 2) % 12],
-                    2020, this.dummyDoctors[i].getID(), this.dummyExaminations[i].getType(), this.dummyMedicines[i].getName(),
-                    this.dummyNurses[i].getID(), this.dummyDiseases[i].getName(), this.dummyDoctors[i].getID(),
-                    this.dummyHospitalizations[i].getID());
+        for (; i < 5; i++) {
+            this.dummyHospitalizations[i] = new Hospitalization(i, this.dummyPatients[i].getAMKA(), this.now.getDayOfMonth(),
+                    this.now.getMonthValue(), this.now.getYear(), this.now.getDayOfMonth() + i, this.now.getMonthValue() + i,
+                    this.now.getYear());
+        }
+
+        for (i = 0; i < 3; i++) {
+            this.dummyVisits[i] = new Visit(i, this.dummyPatients[i].getAMKA(), this.symptoms[i], this.now.getDayOfMonth() - 1,
+                    this.now.getMonthValue(), this.now.getYear(), 0, this.dummyDoctors[i % 2].getID(),
+                    this.dummyExaminations[i].getType(), this.dummyMedicines[i].getName(), this.dummyNurses[i % 2].getID(),
+                    this.dummyDiseases[i].getName(), this.dummyDoctors[i % 2].getID(), this.dummyHospitalizations[i].getID());
+        }
+
+        for (; i < 5; ++i) {
+            this.dummyVisits[i] = new Visit(i, this.dummyPatients[i].getAMKA(), this.symptoms[i], this.now.getDayOfMonth(),
+                    this.now.getMonthValue(), this.now.getYear(), 1, this.dummyDoctors[i - 1].getID(),
+                    this.dummyExaminations[i].getType(), this.dummyMedicines[i].getName(), this.dummyNurses[i - 1].getID(),
+                    this.dummyDiseases[i].getName(), this.dummyDoctors[i - 2].getID(), this.dummyHospitalizations[i].getID());
         }
     }
 
@@ -143,6 +162,8 @@ public final class Generator {
         this.cities = new String[]{"Streuhstin", "Chicaster", "Vluldale", "Zostin", "Vona"};
         this.numbers = new int[]{1, 23, 3, 12, 9};
 
+        this.symptoms = new String[]{"Στομαχόπονος, διάρροια", "Πονοκέφαλος", "Πυρετός", "Βήχας", "Κόπωση"};
+
         this.vigilTypes = new char[]{'Μ', 'Χ', 'Ε'};
 
         this.diseasesNames = new String[]{"Κάταγμα", "Στηθάχγη", "Γρίπη", "Γαστρεντερίτιδα", "COVID"};
@@ -153,10 +174,7 @@ public final class Generator {
         this.medicineTypes = new String[]{"Νοσοκομειακό", "Κανονικό", "Κανονικό", "Κανονικό", "Νοσοκομειακό"};
         this.medicineASCs = new int[]{10, 88, 50, 33, 99};
 
-        this.days = new String[]{"10", "13", "14", "15", "26", "27", "28"};
-        this.months = new String[]{"01", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-
-        this.symptoms = new String[]{"Στομαχόπονος, διάρροια", "Πονοκέφαλος", "Πυρετός", "Βήχας", "Κόπωση"};
+        now = LocalDateTime.now();
 
         this.dummyPatients = new Patient[5];
         this.dummyDoctors = new Doctor[5];
@@ -165,7 +183,7 @@ public final class Generator {
         this.dummyInfoSysUsers = new InfoSysUser[20];
         this.dummyDiseases = new Disease[5];
         this.dummyMedicines = new Medicine[5];
-        this.dummyVigils = new Vigil[5];
+        this.dummyVigils = new Vigil[10];
         this.dummyChronicDiseases = new ChronicDisease[5];
         this.dummyExaminations = new Examination[5];
         this.dummyHospitalizations = new Hospitalization[5];
@@ -222,4 +240,9 @@ public final class Generator {
     public Visit[] getDummyVisits() {
         return this.dummyVisits;
     }
+
+    public LocalDateTime getNow() {
+        return this.now;
+    }
+
 }
