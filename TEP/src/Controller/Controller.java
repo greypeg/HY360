@@ -146,7 +146,6 @@ public class Controller {
         this.generator = new Generator();
 
         Initializer in = new Initializer(con, generator);
-
         initializeVigils();
     }
 
@@ -216,4 +215,29 @@ public class Controller {
 
         createReExaminationFromDoctor();
     }
+
+    public void executeSQL(String sql) throws SQLException {
+        Statement st = this.con.createStatement();
+        st.executeUpdate(sql);
+    }
+
+//    public String getVisitsStateAtTheEndOfVigil() {
+//
+//    }
+
+//    public String getStatsPerVigil() {
+//
+//    }
+//
+//    public String getStatsPerMonth() {
+//
+//    }
+//
+//    public String getCOVID_19Report() {
+//
+//    }
+//
+//    public String getVigilsPerMonth(int EmployeeID) {
+//
+//    }
 }
