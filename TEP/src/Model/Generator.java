@@ -20,8 +20,6 @@ public final class Generator {
     private final String[] names;
     private final int[] AMKAs;
     private final String[] specialties;
-    private final String[] usernames;
-    private final String[] passwords;
 
     private final String[] streets;
     private final String[] cities;
@@ -33,6 +31,8 @@ public final class Generator {
     private final String[] diseasesNames;
 
     private final String[] examinationTypes;
+
+    private final String[] passwords;
 
     private final String[] medicineNames;
     private final String[] medicineTypes;
@@ -64,25 +64,25 @@ public final class Generator {
             this.dummyPatients[i] = new Patient(this.surnames[j], this.names[j], this.AMKAs[i],
                     "Κανένας", "69" + String.valueOf(get8DigitNum()), this.streets[i], this.cities[i], this.numbers[i]);
 
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], -1, this.dummyPatients[i].getAMKA());
+            this.dummyInfoSysUsers[j] = new InfoSysUser(-1, this.dummyPatients[i].getAMKA(), this.passwords[j]);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
             this.dummyDoctors[i] = new Doctor(j, this.surnames[j], this.names[j], this.specialties[i]);
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyDoctors[i].getID(), -1);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.dummyDoctors[i].getID(), -1, this.passwords[j]);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
             this.dummyNurses[i] = new Nurse(j, this.surnames[j], this.names[j]);
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyNurses[i].getID(), -1);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.dummyNurses[i].getID(), -1, this.passwords[j]);
             j++;
         }
 
         for (int i = 0; i < 5; i++) {
             this.dummyAdmins[i] = new AdminStaff(j, this.surnames[j], this.names[j]);
-            this.dummyInfoSysUsers[j] = new InfoSysUser(this.usernames[j], this.passwords[i], this.dummyAdmins[i].getID(), -1);
+            this.dummyInfoSysUsers[j] = new InfoSysUser(this.dummyAdmins[i].getID(), -1, this.passwords[j]);
             j++;
         }
 
@@ -154,10 +154,6 @@ public final class Generator {
 
         this.specialties = new String[]{"Ειδικευόμενος", "Διευθυντής", "Επίκουρος_Διευθυντής", "Επιμελητής_Α", "Επιμελητής_Β"};
 
-        this.usernames = new String[]{"PIPIS", "PIPOS", "PIP", "POP", "PAP", "AA", "sSS", "QQQ", "AD", "sdw",
-            "PIPI", "PIPO", "P", "PP", "PA", "A", "sS", "QQ", "A", "sw"};
-        this.passwords = new String[]{"PIPIS111", "PIPOS112", "PIP121", "POP122", "PAP211"};
-
         this.streets = new String[]{"Campus", "Coach", "Steam", "Long", "Medieval"};
         this.cities = new String[]{"Streuhstin", "Chicaster", "Vluldale", "Zostin", "Vona"};
         this.numbers = new int[]{1, 23, 3, 12, 9};
@@ -173,6 +169,9 @@ public final class Generator {
         this.medicineNames = new String[]{"ABRAXANE", "ABSEAMED", "ABSEAMED_40.000IU", "ACCOFIL", "ACLASTA"};
         this.medicineTypes = new String[]{"Νοσοκομειακό", "Κανονικό", "Κανονικό", "Κανονικό", "Νοσοκομειακό"};
         this.medicineASCs = new int[]{10, 88, 50, 33, 99};
+
+        this.passwords = new String[]{"asds", "qssa", "xcxv", "sdas", "sdqqa", "242", "s0", "Asszc9", "sdxz", "sd23",
+            "121243", "243", "234", "46", "9876", "wwww", "scxmcmx", "sdac", "0000", "xixixii"};
 
         now = LocalDateTime.now();
 

@@ -52,11 +52,9 @@ public final class Initializer {
                 + ");";
 
         createTables[4] = "CREATE TABLE IF NOT EXISTS Χρήστες_Πληροφοριακού_Συστήματος("
-                + "Username VARCHAR(30), "
-                + "Password VARCHAR(40), "
                 + "ID_Υπαλλήλου INT, "
                 + "AMKA_Ασθενούς INT, "
-                + "CONSTRAINT Login PRIMARY KEY(Username, Password)"
+                + "password VARCHAR(30)"
                 + ");";
 
         createTables[5] = "CREATE TABLE IF NOT EXISTS Εφημερίες("
@@ -238,15 +236,13 @@ public final class Initializer {
         Statement st = con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Χρήστες_Πληροφοριακού_Συστήματος;");
 
-        String sql = "INSERT INTO Χρήστες_Πληροφοριακού_Συστήματος VALUES(?, ?, ?, ?);";
+        String sql = "INSERT INTO Χρήστες_Πληροφοριακού_Συστήματος VALUES(?, ?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
-        for (int i = 0; i < 10; i++) {
-            stmt.setString(1, generator.getDummyInfoSysUsers()[i].getUsername());
-            stmt.setString(2, generator.getDummyInfoSysUsers()[i].getPassword());
-
-            stmt.setInt(3, generator.getDummyInfoSysUsers()[i].getEmployeeID());
-            stmt.setInt(4, generator.getDummyInfoSysUsers()[i].getPatientAMKA());
+        for (int i = 0; i < 20; i++) {
+            stmt.setInt(1, generator.getDummyInfoSysUsers()[i].getEmployeeID());
+            stmt.setInt(2, generator.getDummyInfoSysUsers()[i].getPatientAMKA());
+            stmt.setString(3, generator.getDummyInfoSysUsers()[i].getPassword());
 
             stmt.executeUpdate();
         }

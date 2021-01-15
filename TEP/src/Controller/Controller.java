@@ -90,7 +90,7 @@ public class Controller {
     }
 
     public Connection getCon() {
-        return con;
+        return this.con;
     }
 
     private int getLastHospitalizationID() throws SQLException {
@@ -298,8 +298,4 @@ public class Controller {
 //    public String getVigilsPerMonth(int EmployeeID) {
 //
 //    }
-    public Connection getCon() {
-        return this.con;
-    }
-
 }
