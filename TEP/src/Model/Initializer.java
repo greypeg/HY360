@@ -6,33 +6,15 @@
 package Model;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Stefito
  */
 public final class Initializer {
-
-    private Connection CreateDataBaseConnection(String databaseName) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:mysql://localhost";
-        int port = 3306;
-        String username = "root";
-        String password = "";
-        Connection con;
-
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
-        con = DriverManager.getConnection(
-                url + ":" + port + "/" + databaseName + "?characterEncoding=UTF-8", username, password);
-
-        return con;
-    }
 
     private void CreateDataBaseTables(Connection con) throws SQLException {
         Statement stmt = con.createStatement();
@@ -134,29 +116,19 @@ public final class Initializer {
         }
     }
 
-    private void FillDummies(Connection con) throws SQLException {
-        Generator generator = new Generator();
-
-        try {
-            FillPatientDummies(con, generator);
-            FillDoctorDummies(con, generator);
-            FillNurseDummies(con, generator);
-            FillAdminDummies(con, generator);
-            FillDiseaseDummies(con, generator);
-            FillMedicineDummies(con, generator);
-            FillInfoSysUserDummies(con, generator);
-            FillVigilDummies(con, generator);
-            FillChronicDiseasesDummies(con, generator);
-            FillExaminationDummies(con, generator);
-            FillHospitalizationDummies(con, generator);
-            FillVisitDummies(con, generator);
-        } catch (Exception e) {
-            if (e instanceof SQLException) {
-                throw e;
-            } else {
-                e.printStackTrace();
-            }
-        }
+    private void FillDummies(Connection con, Generator generator) throws SQLException {
+        FillPatientDummies(con, generator);
+        FillDoctorDummies(con, generator);
+        FillNurseDummies(con, generator);
+        FillAdminDummies(con, generator);
+        FillDiseaseDummies(con, generator);
+        FillMedicineDummies(con, generator);
+        FillInfoSysUserDummies(con, generator);
+        FillVigilDummies(con, generator);
+        FillChronicDiseasesDummies(con, generator);
+        FillExaminationDummies(con, generator);
+        FillHospitalizationDummies(con, generator);
+        FillVisitDummies(con, generator);
     }
 
     private void FillPatientDummies(Connection con, Generator generator) throws SQLException {
@@ -370,17 +342,8 @@ public final class Initializer {
 
     }
 
-    public Initializer(String databaseName) {
-        try {
-            Connection con = CreateDataBaseConnection(databaseName);
-            CreateDataBaseTables(con);
-            FillDummies(con);
-        } catch (Exception e) {
-            if (e instanceof ClassNotFoundException) {
-                Logger.getLogger(Initializer.class.getName()).log(Level.SEVERE, null, e);
-            } else if (e instanceof SQLException) {
-                Logger.getLogger(Initializer.class.getName()).log(Level.SEVERE, null, e);
-            }
-        }
+    public Initializer(Connection con, Generator generator) throws SQLException {
+        CreateDataBaseTables(con);
+        FillDummies(con, generator);
     }
 }

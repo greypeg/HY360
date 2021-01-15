@@ -7,14 +7,22 @@ package Run;
 
 import Controller.Controller;
 import View.login;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author 12
+ * @author Stefito
  */
 public class Run {
+
     public static void main(String[] args) {
-        Controller cont = new Controller();
-        new login().setVisible(true);
+        try {
+            Controller cont = new Controller("τεπ");
+            new login().setVisible(true);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Run.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

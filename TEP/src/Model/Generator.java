@@ -89,7 +89,7 @@ public final class Generator {
 
         this.dummyVigils[0] = new Vigil(this.dummyDoctors[0].getID(), this.vigilTypes[0]);
         this.dummyVigils[1] = new Vigil(this.dummyDoctors[1].getID(), this.vigilTypes[1]);
-        this.dummyVigils[2] = new Vigil(this.dummyDoctors[2].getID(), this.vigilTypes[2]);
+        this.dummyVigils[2] = new Vigil(this.dummyNurses[1].getID(), this.vigilTypes[2]);
         this.dummyVigils[3] = new Vigil(this.dummyNurses[0].getID(), this.vigilTypes[0]);
         this.dummyVigils[4] = new Vigil(this.dummyAdmins[0].getID(), this.vigilTypes[0]);
 
