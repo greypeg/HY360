@@ -153,9 +153,8 @@ public final class Generator {
         this.medicineTypes = new String[]{"Νοσοκομειακό", "Κανονικό", "Κανονικό", "Κανονικό", "Νοσοκομειακό"};
         this.medicineASCs = new int[]{10, 88, 50, 33, 99};
 
-        this.days = new String[]{"Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκεύη", "Σάββατο", "Κυριακή"};
-        this.months = new String[]{"Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβρης",
-            "Οκτώβρης", "Νοέμβρης", "Δεκέμβρης"};
+        this.days = new String[]{"10", "13", "14", "15", "26", "27", "28"};
+        this.months = new String[]{"01", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
 
         this.symptoms = new String[]{"Στομαχόπονος, διάρροια", "Πονοκέφαλος", "Πυρετός", "Βήχας", "Κόπωση"};
 
@@ -223,5 +222,4 @@ public final class Generator {
     public Visit[] getDummyVisits() {
         return this.dummyVisits;
     }
-
 }

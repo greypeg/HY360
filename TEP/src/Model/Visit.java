@@ -20,10 +20,10 @@ public class Visit {
     private final int examinationDoctorID;
     private final String examinationType;
     private final String medicineName;
-    private final int examinationNurseID;
-    private final String diagnosedDisease;
-    private final int reexaminationDoctorID;
-    private final int hospitalizationID;
+    private int examinationNurseID;
+    private String diagnosedDisease;
+    private int reexaminationDoctorID;
+    private int hospitalizationID;
 
     public Visit(int ID, int patientAMKA, String patientSymptoms, String Day, String Month, int Year, int examinationDoctorID, String examinationType, String medicineName, int examinationNurseID, String diagnosedDisease, int reexaminationDoctorID, int hospitalizationID) {
         this.ID = ID;
@@ -93,5 +93,20 @@ public class Visit {
         return this.hospitalizationID;
     }
 
+    public void setExaminationNurseID(int examinationNurseID) {
+        this.examinationNurseID = examinationNurseID;
+    }
+
+    public void setDiagnosedDisease(String diagnosedDisease) {
+        this.diagnosedDisease = diagnosedDisease;
+    }
+
+    public void setReExaminationDoctorID(int reexaminationDoctorID) {
+        this.reexaminationDoctorID = reexaminationDoctorID;
+    }
+
+    public void setHospitalizationID(int hospitalizationID) {
+        this.hospitalizationID = hospitalizationID;
+    }
 
 }
