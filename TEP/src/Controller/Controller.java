@@ -89,6 +89,10 @@ public class Controller {
         return lastVisitID;
     }
 
+    public Connection getCon() {
+        return con;
+    }
+
     private int getLastHospitalizationID() throws SQLException {
         int lastHospitalization = -1;
 
