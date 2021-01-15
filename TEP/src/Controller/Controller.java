@@ -7,6 +7,7 @@ package Controller;
 
 import Model.Generator;
 import Model.Initializer;
+import Model.Patient;
 import Model.Vigil;
 import Model.Visit;
 import java.sql.Connection;
@@ -16,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -26,9 +28,14 @@ public class Controller {
 
     private final Connection con;
     private final Generator generator;
+    public Connection getCon() {
+        return con;
+    }
 
     private Visit visit;
     private Vigil[] vigils;
+    
+   
 
     private int examinationDoctorID;
 
@@ -146,7 +153,6 @@ public class Controller {
         this.generator = new Generator();
 
         Initializer in = new Initializer(con, generator);
-
         initializeVigils();
     }
 
@@ -206,6 +212,8 @@ public class Controller {
 
         createExaminationFromNurse();
     }
+
+ 
 
     public void takeReExaminationFromDoctor(int AMKA) throws SQLException {
         int rnd = new Random().nextInt(5);
