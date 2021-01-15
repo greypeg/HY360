@@ -294,4 +294,8 @@ public class Controller {
 //    public String getVigilsPerMonth(int EmployeeID) {
 //
 //    }
+    public Connection getCon() {
+        return this.con;
+    }
+
 }
