@@ -21,7 +21,7 @@ public class Patient {
     private final int number;
 
     public Patient(String surname, String name, int AMKA, String insurance_agency, String phone, String street,
-            String city, int number) {
+        String city, int number) {
         this.surname = surname;
         this.name = name;
         this.AMKA = AMKA;

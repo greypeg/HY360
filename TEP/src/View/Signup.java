@@ -275,7 +275,7 @@ public class Signup extends javax.swing.JFrame {
             stmt.executeUpdate();
 
                 dispose();
-                home change = new home();
+                home change = new home(this.amka.getText());
                 change.setVisible(true);
 
         }

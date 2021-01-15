@@ -24,6 +24,7 @@ public class login extends javax.swing.JFrame {
         initComponents();
     }
 
+    public String amka_login;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -180,7 +181,8 @@ public class login extends javax.swing.JFrame {
                 pst = con.prepareStatement(sql);
                 pst.setString(1,this.id.getText());
                 ResultSet rs = pst.executeQuery();
-
+                amka_login = this.id.getText();
+                
             }else{
                 
                 /*String sql = "Select * from manage where Password=? and ManageID=?";
@@ -194,7 +196,7 @@ public class login extends javax.swing.JFrame {
             if(rs.next()){
                 JOptionPane.showMessageDialog(null, "Welcome");
                 dispose();
-                home change = new home();
+                home change = new home(amka_login);
                 change.setVisible(true);
             }
             else{
