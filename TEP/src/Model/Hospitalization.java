@@ -13,14 +13,15 @@ public class Hospitalization {
 
     private final int ID;
     private final int patientAMKA;
-    private final String insertDay;
-    private final String insertMonth;
+    private final int insertDay;
+    private final int insertMonth;
     private final int insertYear;
-    private final String exitDay;
-    private final String exitMonth;
+    private final int exitDay;
+    private final int exitMonth;
     private final int exitYear;
 
-    public Hospitalization(int ID, int patientAMKA, String insertDay, String insertMonth, int insertYear, String exitDay, String exitMonth, int exitYear) {
+    public Hospitalization(int ID, int patientAMKA, int insertDay, int insertMonth, int insertYear, int exitDay, int exitMonth,
+            int exitYear) {
         this.ID = ID;
         this.patientAMKA = patientAMKA;
         this.insertDay = insertDay;
@@ -39,11 +40,11 @@ public class Hospitalization {
         return this.patientAMKA;
     }
 
-    public String getInsertDay() {
+    public int getInsertDay() {
         return this.insertDay;
     }
 
-    public String getInsertMonth() {
+    public int getInsertMonth() {
         return this.insertMonth;
     }
 
@@ -51,11 +52,11 @@ public class Hospitalization {
         return this.insertYear;
     }
 
-    public String getExitDay() {
+    public int getExitDay() {
         return this.exitDay;
     }
 
-    public String getExitMonth() {
+    public int getExitMonth() {
         return this.exitMonth;
     }
 
