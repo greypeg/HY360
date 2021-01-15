@@ -7,6 +7,7 @@ package Controller;
 
 import Model.Generator;
 import Model.Initializer;
+import Model.Vigil;
 import Model.Visit;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,6 +28,9 @@ public class Controller {
     private final Generator generator;
 
     private Visit visit;
+    private Vigil[] vigils;
+
+    private int examinationDoctorID;
 
     private int[] getVigilIDs() throws SQLException {
         int[] IDs = new int[5];
@@ -44,7 +48,7 @@ public class Controller {
         return IDs;
     }
 
-    private void updateVigils(int[] IDs) throws SQLException {
+    private void updateVigils() throws SQLException {
         Statement st = this.con.createStatement();
         st.executeUpdate("TRUNCATE TABLE Εφημερίες;");
 
@@ -52,8 +56,8 @@ public class Controller {
         PreparedStatement stmt = con.prepareStatement(sql);
 
         for (int i = 0; i < 5; i++) {
-            stmt.setInt(1, IDs[i]);
-            stmt.setString(2, Character.toString(this.generator.getDummyVigils()[i].getType()));
+            stmt.setInt(1, this.vigils[i].getEmployeeID());
+            stmt.setString(2, Character.toString(this.vigils[i].getType()));
 
             stmt.executeUpdate();
         }
@@ -131,11 +135,19 @@ public class Controller {
         return connection;
     }
 
+    private void initializeVigils() {
+        this.vigils = new Vigil[5];
+
+        System.arraycopy(this.generator.getDummyVigils(), 0, this.vigils, 0, 5);
+    }
+
     public Controller(String DBName) throws ClassNotFoundException, SQLException {
         this.con = CreateDataBaseConnection(DBName);
         this.generator = new Generator();
 
         Initializer in = new Initializer(con, generator);
+
+        initializeVigils();
     }
 
     public void setVigils() throws SQLException {
@@ -153,15 +165,19 @@ public class Controller {
 
         newIDs[4] = (((IDs[4] + 2) % 10) % 5) + 15;
 
-        updateVigils(newIDs);
+        for (int j = 0; j < 5; j++) {
+            this.vigils[j] = new Vigil(newIDs[j], this.generator.getDummyVigils()[j].getType());
+        }
+
+        updateVigils();
     }
 
     public void takeExaminationFromDoctor(int AMKA, String symptoms) throws SQLException {
         int lastVisitID = getLastVisitID();
         int visitID = lastVisitID + 1;
 
-        int rnd = new Random().nextInt(5);
-        int examinationDoctorID = this.generator.getDummyDoctors()[rnd].getID();
+        int rnd = new Random().nextInt(2);
+        this.examinationDoctorID = this.vigils[rnd].getEmployeeID();
 
         rnd = new Random().nextInt(5);
         String examinationType = this.generator.getDummyExaminations()[rnd].getType();
@@ -172,15 +188,15 @@ public class Controller {
         LocalDateTime now = LocalDateTime.now();
         /* DO in View */
         this.visit = new Visit(visitID, AMKA, symptoms, Integer.toString(now.getDayOfMonth()),
-                Integer.toString(now.getMonthValue()), now.getYear(), examinationDoctorID, examinationType,
+                Integer.toString(now.getMonthValue()), now.getYear(), this.examinationDoctorID, examinationType,
                 medicineName, -1, "-1", -1, -1);
 
         createExaminationFromDoctor();
     }
 
     public void takeExaminationFromNurse(int AMKA) throws SQLException {
-        int rnd = new Random().nextInt(5);
-        int examinationNurseID = this.generator.getDummyNurses()[rnd].getID();
+        int rnd = new Random().nextInt(2);
+        int examinationNurseID = this.vigils[rnd + 2].getEmployeeID();
 
         rnd = new Random().nextInt(5);
         String diagnosedDisease = this.generator.getDummyDiseases()[rnd].getName();
@@ -193,12 +209,9 @@ public class Controller {
 
     public void takeReExaminationFromDoctor(int AMKA) throws SQLException {
         int rnd = new Random().nextInt(5);
-        int reexaminationDoctorID = this.generator.getDummyDoctors()[rnd].getID();
-
-        rnd = new Random().nextInt(5);
         int hospitalizationID = this.generator.getDummyHospitalizations()[rnd].getID();
 
-        this.visit.setReExaminationDoctorID(reexaminationDoctorID);
+        this.visit.setReExaminationDoctorID(this.examinationDoctorID);
         this.visit.setHospitalizationID(hospitalizationID);
 
         createReExaminationFromDoctor();
