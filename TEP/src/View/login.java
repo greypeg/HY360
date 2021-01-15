@@ -169,12 +169,14 @@ public class login extends javax.swing.JFrame {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/τεπ","root","");
             String selection = this.select.getSelectedItem().toString();
 
-            if(selection == "Doctor"){
-                String sql = "Select * from doctors where MedicID=? and Password=?";
+            if(selection == "Doctor" || selection == "Nurse"){
+                String sql = "Select * from χρήστες_πληροφοριακού_συστήματος where ID_Υπαλλήλου=? and Password=?";
                 pst = con.prepareStatement(sql);
                 pst.setString(1,this.id.getText());
                 pst.setString(2, this.password.getText());
-                ResultSet rs = pst.executeQuery();
+               
+    
+             
 
             } else if(selection == "Patient"){
                 String sql = "SELECT * FROM ασθενείς WHERE ΑΜΚΑ=?";
@@ -194,16 +196,23 @@ public class login extends javax.swing.JFrame {
             ResultSet rs = pst.executeQuery();
 
             if(rs.next()){
+                if(selection == "Patient"){
                 JOptionPane.showMessageDialog(null, "Welcome");
                 dispose();
                 home change = new home(amka_login);
                 change.setVisible(true);
-            }
+            }   else if (selection == "Doctor" || selection == "Nurse"){
+                JOptionPane.showMessageDialog(null, "Welcome");
+                dispose();
+                home_doctor change = new home_doctor();
+                change.setVisible(true);
+            }}
             else{
                 JOptionPane.showMessageDialog(null, "Invalid Credentials");
                 this.id.setText("");
                 this.password.setText("");
             }
+            
             con.close();
 
         }
