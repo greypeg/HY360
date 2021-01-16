@@ -186,11 +186,9 @@ public class login extends javax.swing.JFrame {
                 amka_login = this.id.getText();
                 
             }else{
-                
-                /*String sql = "Select * from manage where Password=? and ManageID=?";
-                PreparedStatement pst = con.prepareStatement(sql);
+                String sql = "Select * from διοικητικό_προσωπικό where ID=?";
+                pst = con.prepareStatement(sql);
                 pst.setString(1,this.id.getText());
-                ResultSet rs = pst.executeQuery();*/
             }
 
             ResultSet rs = pst.executeQuery();
@@ -206,7 +204,13 @@ public class login extends javax.swing.JFrame {
                 dispose();
                 home_doctor change = new home_doctor();
                 change.setVisible(true);
-            }}
+            } else {
+                JOptionPane.showMessageDialog(null, "Welcome");
+                dispose();
+                home_admin change = new home_admin();
+                change.setVisible(true);
+            }
+            }
             else{
                 JOptionPane.showMessageDialog(null, "Invalid Credentials");
                 this.id.setText("");
