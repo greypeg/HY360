@@ -7,7 +7,6 @@ package View;
 
 import Controller.Controller;
 import Model.Hospitalization;
-import Model.Patient;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,41 +21,45 @@ import javax.swing.table.DefaultTableModel;
  */
 public class home_doctor extends javax.swing.JFrame {
 
+    private Controller cont;
+
     /**
      * Creates new form home_doctor
      */
-    public home_doctor() {
+    public home_doctor(Controller cont) {
+        this.cont = cont;
         initComponents();
     }
-    public ArrayList <Hospitalization> list_hos; 
+    public ArrayList<Hospitalization> list_hos;
 
-     public void FetchPatient() throws ClassNotFoundException, SQLException{
-    Controller cont = new Controller("τεπ");
-    String sql = "SELECT * FROM νοσηλείες ";
-    PreparedStatement stmt = cont.getCon().prepareStatement(sql);
-    ResultSet re = stmt.executeQuery();
-    ArrayList <Hospitalization> list_hos = new ArrayList<>();
-   // System.out.println("we chilloinh");
-    while (re.next()){
-     Hospitalization hos = new Hospitalization(re.getInt("ID"), re.getInt("ΑΜΚΑ_Ασθενούς"), -1,-1,-1,-1,-1,-1);
-     list_hos.add(hos);
-    }
-   // System.out.println("the end");
+    public void FetchPatient() throws ClassNotFoundException, SQLException {
+        String sql = "SELECT * FROM νοσηλείες ";
+        PreparedStatement stmt = this.cont.getCon().prepareStatement(sql);
+        ResultSet re = stmt.executeQuery();
+        ArrayList<Hospitalization> list_hos = new ArrayList<>();
+        // System.out.println("we chilloinh");
+        while (re.next()) {
+            Hospitalization hos = new Hospitalization(re.getInt("ID"), re.getInt("ΑΜΚΑ_Ασθενούς"), -1, -1, -1, -1, -1, -1);
+            list_hos.add(hos);
+        }
+        // System.out.println("the end");
 
     }
-    public void show_patient() throws ClassNotFoundException, SQLException{
+
+    public void show_patient() throws ClassNotFoundException, SQLException {
         FetchPatient();
         //System.out.println("ALL GOOD");
-       DefaultTableModel model = (DefaultTableModel)hospitalization.getModel();
-       //  System.out.println("damn");
-        Object row [] = new Object[2];
-       for(int i=0; i<list_hos.size(); i++){
-           row[0] = list_hos.get(i);
-           model.addRow(row);
-       }
-       // model.addRow(row);
-      //  System.out.println("so close");
+        DefaultTableModel model = (DefaultTableModel) hospitalization.getModel();
+        //  System.out.println("damn");
+        Object row[] = new Object[2];
+        for (int i = 0; i < list_hos.size(); i++) {
+            row[0] = list_hos.get(i);
+            model.addRow(row);
+        }
+        // model.addRow(row);
+        //  System.out.println("so close");
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -143,9 +146,16 @@ public class home_doctor extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       dispose();
-       login page = new login();
-       page.setVisible(true);
+        dispose();
+        login page = null;
+        try {
+            page = new login(this.cont);
+        } catch (SQLException ex) {
+            Logger.getLogger(home_doctor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(home_doctor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        page.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

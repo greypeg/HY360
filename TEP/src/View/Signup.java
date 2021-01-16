@@ -1,33 +1,31 @@
 package View;
 
+import Controller.Controller;
 import Model.Patient;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
-
-
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author greyp
  */
 public class Signup extends javax.swing.JFrame {
 
+    private Controller cont;
+
     /**
      * Creates new form Signup
      */
-    public Signup() {
+    public Signup(Controller cont) {
+        this.cont = cont;
         initComponents();
     }
 
-    public int flag=0;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,6 +53,8 @@ public class Signup extends javax.swing.JFrame {
         number = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -132,6 +132,14 @@ public class Signup extends javax.swing.JFrame {
 
         jLabel9.setText("New Patient Folder");
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setText("Password");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -139,8 +147,8 @@ public class Signup extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(164, 164, 164)
                 .addComponent(jLabel9)
-                .addContainerGap(164, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -150,23 +158,23 @@ public class Signup extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jLabel8)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel6))
-                .addGap(110, 110, 110)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(number, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(street)
-                            .addComponent(surname)
-                            .addComponent(phone)
-                            .addComponent(amka)
-                            .addComponent(name)
-                            .addComponent(city)
-                            .addComponent(insurance))
-                        .addGap(45, 45, 45))))
+                        .addComponent(jLabel10)
+                        .addGap(57, 57, 57)
+                        .addComponent(jButton1)))
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                    .addComponent(number)
+                    .addComponent(street, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(surname, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(phone, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(amka, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(name, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(city, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(insurance, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(45, 45, 45))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,15 +188,17 @@ public class Signup extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(surname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(amka, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(insurance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(amka, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 10, Short.MAX_VALUE)
+                        .addComponent(insurance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(phone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -204,8 +214,16 @@ public class Signup extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(number, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addComponent(jButton1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jButton1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
 
         pack();
@@ -244,21 +262,14 @@ public class Signup extends javax.swing.JFrame {
     }//GEN-LAST:event_numberActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-  try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String databaseName = new String("τεπ");
-            int port = 3306;
-            String username = new String("root");
-            String password = new String("");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/τεπ","root","");
+        try {
+
             String sql = "INSERT INTO ασθενείς VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             String sq2 = "INSERT INTO χρήστες_πληροφοριακού_συστήματος VALUES (?, ?, ?)";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            PreparedStatement stmt2 = con.prepareStatement(sq2);
-            
-            
+            PreparedStatement stmt = this.cont.getCon().prepareStatement(sql);
+            PreparedStatement stmt2 = this.cont.getCon().prepareStatement(sq2);
+
             String surname1 = this.surname.getText();
-            System.out.println(surname1);
             String name1 = this.name.getText();
             int amka1 = Integer.parseInt(this.amka.getText());
             String insurance1 = this.insurance.getText();
@@ -267,9 +278,8 @@ public class Signup extends javax.swing.JFrame {
             String city1 = this.city.getText();
             int number1 = Integer.parseInt(this.number.getText());
 
-            Patient first_time = new Patient(surname1,name1,amka1,insurance1,phone1,street1,city1,number1);
-            
-            System.out.println(first_time.getName());
+            Patient first_time = new Patient(surname1, name1, amka1, insurance1, phone1, street1, city1, number1);
+
             stmt.setString(1, first_time.getName());
             stmt.setString(2, first_time.getSurname());
             stmt.setInt(3, first_time.getAMKA());
@@ -279,30 +289,29 @@ public class Signup extends javax.swing.JFrame {
             stmt.setString(7, first_time.getCity());
             stmt.setInt(8, first_time.getNumber());
             stmt.executeUpdate();
-            
-            stmt2.setInt(1,-1);
-            stmt2.setInt(2,first_time.getAMKA());
-            stmt2.setString(3,first_time.getName());
+
+            stmt2.setInt(1, -1);
+            stmt2.setInt(2, first_time.getAMKA());
+            stmt2.setString(3, this.jTextField1.getText());
             stmt2.executeUpdate();
 
+            dispose();
+            login change = new login(this.cont);
+            change.setVisible(true);
 
-              if (flag==0){
-                  dispose();
-              login change = new login();
-                change.setVisible(true);
-             
-              }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
 
-                                  
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void selectActionPerformed(java.awt.event.ActionEvent evt) {                                       
-       
-    }    
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void selectActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
     /**
      * @param args the command line arguments
      */
@@ -344,6 +353,7 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JTextField insurance;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -352,6 +362,7 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField name;
     private javax.swing.JTextField number;
     private javax.swing.JTextField phone;

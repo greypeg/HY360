@@ -17,15 +17,16 @@ import javax.swing.JOptionPane;
  */
 public class home_admin extends javax.swing.JFrame {
 
+    private Controller cont;
+
     /**
      * Creates new form home_admin
      */
-    public home_admin() throws ClassNotFoundException, SQLException {
-        this.cont = new Controller("τεπ");
+    public home_admin(Controller cont) throws ClassNotFoundException, SQLException {
+        this.cont = cont;
         initComponents();
     }
 
-    Controller cont;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,6 +41,7 @@ public class home_admin extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,12 +80,21 @@ public class home_admin extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("NewVigils");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(2, 2, 2)
                 .addComponent(jButton5)
                 .addGap(2, 2, 2)
@@ -103,7 +114,9 @@ public class home_admin extends javax.swing.JFrame {
                     .addComponent(jButton6)
                     .addComponent(jButton3)
                     .addComponent(jButton2))
-                .addContainerGap(277, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton4)
+                .addContainerGap(236, Short.MAX_VALUE))
         );
 
         pack();
@@ -111,7 +124,7 @@ public class home_admin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            JOptionPane.showMessageDialog(null, cont.getVisitsReport());
+            JOptionPane.showMessageDialog(null, this.cont.getVisitsReport());
         } catch (SQLException ex) {
             Logger.getLogger(home_admin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,7 +132,7 @@ public class home_admin extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         try {
-            JOptionPane.showMessageDialog(null, cont.getStatsPerMonthReport());
+            JOptionPane.showMessageDialog(null, this.cont.getStatsPerMonthReport());
         } catch (SQLException ex) {
             Logger.getLogger(home_admin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -127,7 +140,7 @@ public class home_admin extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         try {
-            JOptionPane.showMessageDialog(null, cont.getCOVID_19Report());
+            JOptionPane.showMessageDialog(null, this.cont.getCOVID_19Report());
         } catch (SQLException ex) {
             Logger.getLogger(home_admin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -135,32 +148,43 @@ public class home_admin extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            JOptionPane.showMessageDialog(null, cont.getStaffStats());
+            JOptionPane.showMessageDialog(null, this.cont.getStaffStats());
         } catch (SQLException ex) {
             Logger.getLogger(home_admin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        dispose();    
-        login page = new login();
-            page.setVisible(true);// TODO add your handling code here:
+        dispose();
+        login page = null;
+        try {
+            page = new login(this.cont);
+        } catch (SQLException ex) {
+            Logger.getLogger(home_admin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(home_admin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        page.setVisible(true);// TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
-     
-     
-   
-    
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        try {
+            this.cont.setVigils();
+        } catch (SQLException ex) {
+            Logger.getLogger(home_admin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     //public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-/*        try {
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+     */
+ /*        try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -175,11 +199,11 @@ public class home_admin extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(home_admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(home_admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-  */    //  }
-        //</editor-fold>
+     */    //  }
+    //</editor-fold>
 
-        /* Create and display the form */
-       /* java.awt.EventQueue.invokeLater(new Runnable() {
+    /* Create and display the form */
+ /* java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     new home_admin().setVisible(true);
@@ -196,6 +220,7 @@ public class home_admin extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     // End of variables declaration//GEN-END:variables

@@ -32,6 +32,8 @@ public class Controller {
     private Visit visit;
     private Vigil[] vigils;
 
+    private String Symptoms = "";
+
     private int examinationDoctorID;
 
     private int getVigilID() throws SQLException {
@@ -227,7 +229,7 @@ public class Controller {
         updateVigils();
     }
 
-    public void takeExaminationFromDoctor(int AMKA, String symptoms) throws SQLException {
+    public void takeExaminationFromDoctor(int AMKA) throws SQLException {
         int lastVisitID = getLastVisitID();
         int visitID = lastVisitID + 1;
 
@@ -241,7 +243,7 @@ public class Controller {
         String medicineName = this.generator.getDummyMedicines()[rnd].getName();
 
         /* DO in View */
-        this.visit = new Visit(visitID, AMKA, symptoms, this.generator.getNow().getDayOfMonth(),
+        this.visit = new Visit(visitID, AMKA, this.Symptoms, this.generator.getNow().getDayOfMonth(),
                 this.generator.getNow().getMonthValue(), this.generator.getNow().getYear(), this.vigils[0].getID(),
                 this.examinationDoctorID, examinationType, medicineName, -1, "-1", -1, -1);
 
@@ -319,8 +321,8 @@ public class Controller {
         ArrayList<int[]> stats = new ArrayList<>();
 
         Statement stmt = this.con.createStatement();
-        String query = "SELECT COUNT(DISTINCT ID), COUNT(DISTINCT Όνομα_Ασθένειας), COUNT(DISTINCT Τύπος_Εξέτασης),"
-                + " COUNT(DISTINCT Όνομα_Φαρμάκου) FROM επισκέψεις WHERE Μήνας = (SELECT MAX(Μήνας) FROM Επισκέψεις)"
+        String query = "SELECT COUNT(ID), COUNT(Όνομα_Ασθένειας), COUNT(Τύπος_Εξέτασης),"
+                + " COUNT(Όνομα_Φαρμάκου) FROM επισκέψεις WHERE Μήνας = (SELECT MAX(Μήνας) FROM Επισκέψεις)"
                 + " GROUP BY ID_Εφημερίας";
         ResultSet rs = stmt.executeQuery(query);
 
@@ -350,7 +352,7 @@ public class Controller {
         ArrayList<ChronicDisease> cdiseases = new ArrayList<>();
 
         Statement stmt = this.con.createStatement();
-        String query = "SELECT * FROM ασθενείς WHERE ασθενείς.ΑΜΚΑ ="
+        String query = "SELECT * FROM ασθενείς WHERE ασθενείς.ΑΜΚΑ IN"
                 + " (SELECT επισκέψεις.AMKA_Ασθενούς FROM επισκέψεις WHERE επισκέψεις.Όνομα_Ασθένειας = 'COVID')";
         ResultSet rs = stmt.executeQuery(query);
 
@@ -362,7 +364,7 @@ public class Controller {
             patients.add(patient);
         }
 
-        query = "SELECT * FROM χρόνια_νοσήματα WHERE χρόνια_νοσήματα.AMKA_Ασθενούς ="
+        query = "SELECT * FROM χρόνια_νοσήματα WHERE χρόνια_νοσήματα.AMKA_Ασθενούς IN"
                 + " (SELECT επισκέψεις.AMKA_Ασθενούς FROM επισκέψεις WHERE επισκέψεις.Όνομα_Ασθένειας = 'COVID')";
 
         rs = stmt.executeQuery(query);
@@ -384,6 +386,7 @@ public class Controller {
                     COVIDReportString += cdisease.getDiseaseNAme() + " ";
                 }
             }
+            i++;
         }
 
         return COVIDReportString;
@@ -419,4 +422,13 @@ public class Controller {
 
         return staffStatString;
     }
+
+    public void setSymptoms(String Symptoms) {
+        this.Symptoms = Symptoms;
+    }
+
+    public String getSymptoms() {
+        return this.Symptoms;
+    }
+
 }

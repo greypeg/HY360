@@ -5,10 +5,10 @@
  */
 package View;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import Controller.Controller;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,14 +17,18 @@ import javax.swing.JOptionPane;
  */
 public class login extends javax.swing.JFrame {
 
+    private Controller cont;
+
     /**
      * Creates new form login
      */
-    public login() {
+    public login(Controller cont) throws SQLException, ClassNotFoundException {
+        this.cont = cont;
         initComponents();
     }
 
     public String amka_login;
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -159,70 +163,58 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String databaseName = new String("τεπ");
-            int port = 3306;
-            String username = new String("root");
-            String password = new String("");
-            PreparedStatement pst=null;
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/τεπ","root","");
+        try {
+
             String selection = this.select.getSelectedItem().toString();
+            PreparedStatement pst = null;
 
-            if(selection == "Doctor" || selection == "Nurse"){
+            if (selection == "Doctor" || selection == "Nurse") {
                 String sql = "Select * from χρήστες_πληροφοριακού_συστήματος where ID_Υπαλλήλου=? and Password=?";
-                pst = con.prepareStatement(sql);
-                pst.setString(1,this.id.getText());
+                pst = this.cont.getCon().prepareStatement(sql);
+                pst.setString(1, this.id.getText());
                 pst.setString(2, this.password.getText());
-               
-    
-             
 
-            } else if(selection == "Patient"){
+            } else if (selection == "Patient") {
                 String sql = "SELECT * FROM χρήστες_πληροφοριακού_συστήματος WHERE AMKA_Ασθενούς=? and password=?";
-                pst = con.prepareStatement(sql);
-                pst.setString(1,this.id.getText());
-                 pst.setString(2, this.password.getText());
+                pst = this.cont.getCon().prepareStatement(sql);
+                pst.setString(1, this.id.getText());
+                pst.setString(2, this.password.getText());
                 ResultSet rs = pst.executeQuery();
                 amka_login = this.id.getText();
-                
-            }else{
+
+            } else {
                 String sql = "Select * from χρήστες_πληροφοριακού_συστήματος where ID_Υπαλλήλου=? and password=?";
-                pst = con.prepareStatement(sql);
-                pst.setString(1,this.id.getText());
+                pst = this.cont.getCon().prepareStatement(sql);
+                pst.setString(1, this.id.getText());
                 pst.setString(2, this.password.getText());
             }
 
             ResultSet rs = pst.executeQuery();
 
-            if(rs.next()){
-                if(selection == "Patient"){
-                JOptionPane.showMessageDialog(null, "Welcome");
-                dispose();
-                home change = new home(amka_login);
-                change.setVisible(true);
-            }   else if (selection == "Doctor" || selection == "Nurse"){
-                JOptionPane.showMessageDialog(null, "Welcome");
-                dispose();
-                home_doctor change = new home_doctor();
-                change.setVisible(true);
+            if (rs.next()) {
+                if (selection == "Patient") {
+                    JOptionPane.showMessageDialog(null, "Welcome");
+                    dispose();
+                    home change = new home(amka_login, cont);
+                    change.setVisible(true);
+                } else if (selection == "Doctor" || selection == "Nurse") {
+                    JOptionPane.showMessageDialog(null, "Welcome");
+                    dispose();
+                    home_doctor change = new home_doctor(cont);
+                    change.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Welcome");
+                    dispose();
+                    home_admin change = new home_admin(cont);
+                    change.setVisible(true);
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "Welcome");
-                dispose();
-                home_admin change = new home_admin();
-                change.setVisible(true);
-            }
-            }
-            else{
                 JOptionPane.showMessageDialog(null, "Invalid Credentials");
                 this.id.setText("");
                 this.password.setText("");
             }
-            
-            con.close();
 
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
 
@@ -230,10 +222,9 @@ public class login extends javax.swing.JFrame {
 
     private void selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectActionPerformed
         String selection = this.select.getSelectedItem().toString();
-        if(selection == "Patient"){
+        if (selection == "Patient") {
             this.uid.setText("AMKA");
-        }
-        else{
+        } else {
             this.uid.setText("Work ID");
             this.pass.setVisible(true);
             this.password.setVisible(true);
@@ -242,7 +233,7 @@ public class login extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         dispose();
-        Signup form = new Signup();
+        Signup form = new Signup(this.cont);
         form.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 

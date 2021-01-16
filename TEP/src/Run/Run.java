@@ -20,7 +20,7 @@ public class Run {
     public static void main(String[] args) {
         try {
             Controller cont = new Controller("τεπ");
-            new login().setVisible(true);
+            new login(cont).setVisible(true);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Run.class.getName()).log(Level.SEVERE, null, ex);
         }
