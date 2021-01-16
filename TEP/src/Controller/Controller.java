@@ -90,7 +90,7 @@ public class Controller {
     }
 
     public Connection getCon() {
-        return con;
+        return this.con;
     }
 
     private int getLastHospitalizationID() throws SQLException {
