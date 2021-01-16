@@ -5,8 +5,10 @@
  */
 package Controller;
 
+import Model.ChronicDisease;
 import Model.Generator;
 import Model.Initializer;
+import Model.Patient;
 import Model.Vigil;
 import Model.Visit;
 import java.sql.Connection;
@@ -15,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -280,22 +283,140 @@ public class Controller {
         st.executeUpdate(sql);
     }
 
-//    public String getVisitsStateAtTheEndOfVigil() {
-//
-//    }
-//    public String getStatsPerVigil() {
-//
-//    }
-//
-//    public String getStatsPerMonth() {
-//
-//    }
-//
-//    public String getCOVID_19Report() {
-//
-//    }
-//
-//    public String getVigilsPerMonth(int EmployeeID) {
-//
-//    }
+    public String getVisitsReport() throws SQLException {
+        String visitsString = "";
+        ArrayList<Visit> visits;
+        visits = new ArrayList<>();
+
+        Statement stmt = this.con.createStatement();
+        String query = "SELECT * FROM Επισκέψεις WHERE ID_Εφημερίας = (SELECT MAX(ID) FROM Εφημερίες);";
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            Visit vi = new Visit(rs.getInt("ID"), rs.getInt("AMKA_Ασθενούς"), rs.getString("Συμπτώματα_Ασθενούς"),
+                    rs.getInt("Ημέρα"), rs.getInt("Μήνας"), rs.getInt("Έτος"), rs.getInt("ID_Εφημερίας"),
+                    rs.getInt("ID_Γιατρού_Εξέτασης"), rs.getString("Τύπος_Εξέτασης"), rs.getString("Όνομα_Φαρμάκου"),
+                    rs.getInt("ID_Νοσηλευτή_Εξέτασης"), rs.getString("Όνομα_Ασθένειας"), rs.getInt("ID_Γιατρού_Επανεξέτασης"),
+                    rs.getInt("ID_Νοσηλείας"));
+
+            visits.add(vi);
+        }
+
+        for (Visit obj : visits) {
+            visitsString += "\n" + obj.getID() + " " + obj.getPatientAMKA() + " "
+                    + obj.getPatientSymptoms() + " " + obj.getDay() + " " + obj.getMonth() + " "
+                    + obj.getYear() + " " + obj.getVigilID() + " " + obj.getExaminationDoctorID()
+                    + " " + obj.getExaminationType() + " " + obj.getMedicineName() + " "
+                    + obj.getExaminationNurseID() + " " + obj.getDiagnosedDisease() + " "
+                    + obj.getReexaminationDoctorID() + " " + obj.getHospitalizationID() + "\n";
+        }
+
+        return visitsString;
+    }
+
+    public String getStatsPerMonthReport() throws SQLException {
+        String statsString = "\nStats per month/vigil:\n";
+        ArrayList<int[]> stats = new ArrayList<>();
+
+        Statement stmt = this.con.createStatement();
+        String query = "SELECT COUNT(DISTINCT ID), COUNT(DISTINCT Όνομα_Ασθένειας), COUNT(DISTINCT Τύπος_Εξέτασης),"
+                + " COUNT(DISTINCT Όνομα_Φαρμάκου) FROM επισκέψεις WHERE Μήνας = (SELECT MAX(Μήνας) FROM Επισκέψεις)"
+                + " GROUP BY ID_Εφημερίας";
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            int[] statsPerVigil = new int[]{0, 0, 0, 0};
+
+            statsPerVigil[0] = rs.getInt(1);
+            statsPerVigil[1] = rs.getInt(2);
+            statsPerVigil[2] = rs.getInt(3);
+            statsPerVigil[3] = rs.getInt(4);
+
+            stats.add(statsPerVigil);
+        }
+        int i = 1;
+        for (int[] obj : stats) {
+            statsString += "  Vigil No" + i + "\n    Number of incidents: " + obj[0] + "\n    Number of diagnosed diseasess: " + obj[1]
+                    + "\n    Number of examinations: " + obj[2] + "\n    Number of prescribed medicines: " + obj[3] + "\n\n";
+            i++;
+        }
+
+        return statsString;
+    }
+
+    public String getCOVID_19Report() throws SQLException {
+        String COVIDReportString = "";
+        ArrayList<Patient> patients = new ArrayList<>();
+        ArrayList<ChronicDisease> cdiseases = new ArrayList<>();
+
+        Statement stmt = this.con.createStatement();
+        String query = "SELECT * FROM ασθενείς WHERE ασθενείς.ΑΜΚΑ ="
+                + " (SELECT επισκέψεις.AMKA_Ασθενούς FROM επισκέψεις WHERE επισκέψεις.Όνομα_Ασθένειας = 'COVID')";
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            Patient patient = new Patient(rs.getString("Επώνυμο"), rs.getString("Όνομα"), rs.getInt("ΑΜΚΑ"),
+                    rs.getString("Ασφαλιστικός_Φορέας"), rs.getString("Τηλέφωνο"), rs.getString("Οδός"), rs.getString("Πόλη"),
+                    rs.getInt("Αριθμός"));
+
+            patients.add(patient);
+        }
+
+        query = "SELECT * FROM χρόνια_νοσήματα WHERE χρόνια_νοσήματα.AMKA_Ασθενούς ="
+                + " (SELECT επισκέψεις.AMKA_Ασθενούς FROM επισκέψεις WHERE επισκέψεις.Όνομα_Ασθένειας = 'COVID')";
+
+        rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            ChronicDisease cdisease = new ChronicDisease(rs.getInt("AMKA_Ασθενούς"), rs.getString("Όνομα_Ασθένειας"));
+
+            cdiseases.add(cdisease);
+        }
+        int i = 1;
+        for (Patient patient : patients) {
+            COVIDReportString += "\nCOVID_19 case No " + i + "\n" + "  Surname: " + patient.getSurname() + "  Name: "
+                    + patient.getName() + " AMKA: " + patient.getAMKA() + " Insurance Agency: " + patient.getInsurance_agency()
+                    + " Phone: " + patient.getPhone() + " Street: " + patient.getStreet() + " City: " + patient.getCity()
+                    + " Number: " + patient.getNumber() + "\n  Chronic Diseases: ";
+
+            for (ChronicDisease cdisease : cdiseases) {
+                if (cdisease.getPatientAMKA() == patient.getAMKA()) {
+                    COVIDReportString += cdisease.getDiseaseNAme() + " ";
+                }
+            }
+        }
+
+        return COVIDReportString;
+    }
+
+    public String getStaffStats() throws SQLException {
+        String staffStatString = "";
+
+        Statement stmt = this.con.createStatement();
+        String query = "SELECT d.ID, count(v.ID_Υπαλλήλου) FROM Γιατροί d LEFT OUTER JOIN Εφημερίες"
+                + " v ON d.ID = v.ID_Υπαλλήλου GROUP BY ID";
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            staffStatString += "Doctor ID: " + rs.getInt(1) + " Number of vigils: " + rs.getInt(2) + "\n";
+        }
+
+        query = "SELECT d.ID, count(v.ID_Υπαλλήλου) FROM Νοσηλευτές d LEFT OUTER JOIN Εφημερίες"
+                + " v ON d.ID = v.ID_Υπαλλήλου GROUP BY ID";
+        rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            staffStatString += "Nurse ID: " + rs.getInt(1) + " Number of vigils: " + rs.getInt(2) + "\n";
+        }
+
+        query = "SELECT d.ID, count(v.ID_Υπαλλήλου) FROM διοικητικό_προσωπικό d LEFT OUTER JOIN"
+                + " Εφημερίες v ON d.ID = v.ID_Υπαλλήλου GROUP BY ID";
+        rs = stmt.executeQuery(query);
+
+        while (rs.next()) {
+            staffStatString += "Admin ID: " + rs.getInt(1) + " Number of vigils: " + rs.getInt(2) + "\n";
+        }
+
+        return staffStatString;
+    }
 }
