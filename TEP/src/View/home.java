@@ -2,6 +2,7 @@ package View;
 
 import Controller.Controller;
 import Model.Patient;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,19 +30,20 @@ public class home extends javax.swing.JFrame {
      * Creates new form home
      *
      */
+     Controller cont;
     public String amka_login;
     public Patient fetch;
-    public home(String amka_login) {
+    public home(String amka_login) throws ClassNotFoundException, SQLException {
         initComponents();
+        cont = new Controller("τεπ");
         this.amka_login = amka_login;
         
     }
-    
+   
 
     
     
     public void FetchPatient() throws ClassNotFoundException, SQLException{
-    Controller cont = new Controller("τεπ");
     String sql = "SELECT * FROM Ασθενείς WHERE ΑΜΚΑ="+amka_login;
     PreparedStatement stmt = cont.getCon().prepareStatement(sql);
     ResultSet re = stmt.executeQuery();
@@ -85,7 +87,6 @@ public class home extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         folder = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
@@ -126,13 +127,6 @@ public class home extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Exit");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
         folder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -152,8 +146,18 @@ public class home extends javax.swing.JFrame {
         jScrollPane1.setViewportView(folder);
 
         jButton2.setText("Exam Nurse");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("ReExam Doctor");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -168,8 +172,6 @@ public class home extends javax.swing.JFrame {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
@@ -182,7 +184,6 @@ public class home extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton3)
-                    .addComponent(jButton5)
                     .addComponent(jButton2)
                     .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -204,27 +205,32 @@ public class home extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-             Controller cont = new Controller("τεπ");
+        
+         try {
              cont.takeExaminationFromDoctor(Integer.parseInt(amka_login), "piretos");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
-        }
+         } catch (SQLException ex) {
+             Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, SQLException {                                         
-      Controller cont = new Controller("τεπ");
-      cont.takeExaminationFromNurse(Integer.parseInt(amka_login));
-    }   
-      private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, SQLException {                                         
-      Controller cont = new Controller("τεπ");
-      cont.takeReExaminationFromDoctor(Integer.parseInt(amka_login));
-    }  
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         try {
+             cont.takeExaminationFromNurse(Integer.parseInt(amka_login));
+         } catch (SQLException ex) {
+             Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+         try {
+             cont.takeReExaminationFromDoctor(Integer.parseInt(amka_login));
+         } catch (SQLException ex) {
+             Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }//GEN-LAST:event_jButton4ActionPerformed
+     
+     
     /**
      * @param args the command line arguments
      */
@@ -266,7 +272,6 @@ public class home extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;

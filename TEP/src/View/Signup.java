@@ -27,6 +27,7 @@ public class Signup extends javax.swing.JFrame {
         initComponents();
     }
 
+    public int flag=0;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -139,23 +140,23 @@ public class Signup extends javax.swing.JFrame {
                 .addGap(164, 164, 164)
                 .addComponent(jLabel9)
                 .addContainerGap(164, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
+                .addGap(110, 110, 110)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6))
-                        .addGap(110, 110, 110)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(number, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(street)
@@ -164,8 +165,8 @@ public class Signup extends javax.swing.JFrame {
                             .addComponent(amka)
                             .addComponent(name)
                             .addComponent(city)
-                            .addComponent(insurance))))
-                .addGap(45, 45, 45))
+                            .addComponent(insurance))
+                        .addGap(45, 45, 45))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,9 +204,8 @@ public class Signup extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(number, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addComponent(jButton1)
-                .addContainerGap())
+                .addGap(25, 25, 25)
+                .addComponent(jButton1))
         );
 
         pack();
@@ -251,19 +251,25 @@ public class Signup extends javax.swing.JFrame {
             String username = new String("root");
             String password = new String("");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/τεπ","root","");
-            String sql = "INSERT INTO Ασθενείς VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO ασθενείς VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sq2 = "INSERT INTO χρήστες_πληροφοριακού_συστήματος VALUES (?, ?, ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
+            PreparedStatement stmt2 = con.prepareStatement(sq2);
             
-            String surname = this.surname.getText();
-            String name = this.name.getText();
-            int amka = Integer.parseInt(this.amka.getText());
-            String insurance = this.insurance.getText();
-            String phone = this.phone.getText();
-            String street = this.street.getText();
-            String city = this.city.getText();
-            int number = Integer.parseInt(this.number.getText());
+            
+            String surname1 = this.surname.getText();
+            System.out.println(surname1);
+            String name1 = this.name.getText();
+            int amka1 = Integer.parseInt(this.amka.getText());
+            String insurance1 = this.insurance.getText();
+            String phone1 = this.phone.getText();
+            String street1 = this.street.getText();
+            String city1 = this.city.getText();
+            int number1 = Integer.parseInt(this.number.getText());
 
-            Patient first_time = new Patient(surname,name,amka,insurance,phone,street,city,number);
+            Patient first_time = new Patient(surname1,name1,amka1,insurance1,phone1,street1,city1,number1);
+            
+            System.out.println(first_time.getName());
             stmt.setString(1, first_time.getName());
             stmt.setString(2, first_time.getSurname());
             stmt.setInt(3, first_time.getAMKA());
@@ -273,11 +279,19 @@ public class Signup extends javax.swing.JFrame {
             stmt.setString(7, first_time.getCity());
             stmt.setInt(8, first_time.getNumber());
             stmt.executeUpdate();
+            
+            stmt2.setInt(1,-1);
+            stmt2.setInt(2,first_time.getAMKA());
+            stmt2.setString(3,first_time.getName());
+            stmt2.executeUpdate();
 
-                dispose();
-                home change = new home(this.amka.getText());
+
+              if (flag==0){
+                  dispose();
+              login change = new login();
                 change.setVisible(true);
-
+             
+              }
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(null, e);
