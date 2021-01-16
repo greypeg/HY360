@@ -101,6 +101,10 @@ public class Visit {
         return this.hospitalizationID;
     }
 
+    public void setReexaminationDoctorID(int reexaminationDoctorID) {
+        this.reexaminationDoctorID = reexaminationDoctorID;
+    }
+
     public void setExaminationNurseID(int examinationNurseID) {
         this.examinationNurseID = examinationNurseID;
     }
@@ -116,5 +120,4 @@ public class Visit {
     public void setHospitalizationID(int hospitalizationID) {
         this.hospitalizationID = hospitalizationID;
     }
-
 }
