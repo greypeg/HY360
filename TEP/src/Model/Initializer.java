@@ -271,7 +271,7 @@ public final class Initializer {
         String sql = "INSERT INTO Χρόνια_Νοσήματα VALUES(?, ?);";
         PreparedStatement stmt = con.prepareStatement(sql);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             stmt.setInt(1, generator.getDummyChronicDiseases()[i].getPatientAMKA());
             stmt.setString(2, generator.getDummyChronicDiseases()[i].getDiseaseNAme());
 

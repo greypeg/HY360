@@ -104,6 +104,7 @@ public final class Generator {
         for (int i = 0; i < 5; i++) {
             this.dummyChronicDiseases[i] = new ChronicDisease(this.dummyPatients[i].getAMKA(), this.dummyDiseases[i].getName());
         }
+        this.dummyChronicDiseases[5] = new ChronicDisease(this.dummyPatients[4].getAMKA(), this.dummyDiseases[2].getName());
 
         for (int i = 0; i < 5; i++) {
             this.dummyMedicines[i] = new Medicine(this.medicineNames[i], this.medicineTypes[i], this.medicineASCs[i], this.dummyDiseases[i].getName());
@@ -183,7 +184,7 @@ public final class Generator {
         this.dummyDiseases = new Disease[5];
         this.dummyMedicines = new Medicine[5];
         this.dummyVigils = new Vigil[10];
-        this.dummyChronicDiseases = new ChronicDisease[5];
+        this.dummyChronicDiseases = new ChronicDisease[6];
         this.dummyExaminations = new Examination[5];
         this.dummyHospitalizations = new Hospitalization[5];
         this.dummyVisits = new Visit[5];
