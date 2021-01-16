@@ -5,6 +5,17 @@
  */
 package View;
 
+import Controller.Controller;
+import Model.Hospitalization;
+import Model.Patient;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author greyp
@@ -17,7 +28,35 @@ public class home_doctor extends javax.swing.JFrame {
     public home_doctor() {
         initComponents();
     }
+    public ArrayList <Hospitalization> list_hos; 
 
+     public void FetchPatient() throws ClassNotFoundException, SQLException{
+    Controller cont = new Controller("τεπ");
+    String sql = "SELECT * FROM νοσηλείες ";
+    PreparedStatement stmt = cont.getCon().prepareStatement(sql);
+    ResultSet re = stmt.executeQuery();
+    ArrayList <Hospitalization> list_hos = new ArrayList<>();
+   // System.out.println("we chilloinh");
+    while (re.next()){
+     Hospitalization hos = new Hospitalization(re.getInt("ID"), re.getInt("ΑΜΚΑ_Ασθενούς"), -1,-1,-1,-1,-1,-1);
+     list_hos.add(hos);
+    }
+   // System.out.println("the end");
+
+    }
+    public void show_patient() throws ClassNotFoundException, SQLException{
+        FetchPatient();
+        //System.out.println("ALL GOOD");
+       DefaultTableModel model = (DefaultTableModel)hospitalization.getModel();
+       //  System.out.println("damn");
+        Object row [] = new Object[2];
+       for(int i=0; i<list_hos.size(); i++){
+           row[0] = list_hos.get(i);
+           model.addRow(row);
+       }
+       // model.addRow(row);
+      //  System.out.println("so close");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,9 +67,8 @@ public class home_doctor extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        hospitalization = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -41,14 +79,7 @@ public class home_doctor extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Exit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        hospitalization.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -64,7 +95,7 @@ public class home_doctor extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(hospitalization);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -72,19 +103,14 @@ public class home_doctor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2))
+                    .addComponent(jButton1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 221, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                 .addContainerGap())
@@ -94,12 +120,14 @@ public class home_doctor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            show_patient();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(home_doctor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(home_doctor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,9 +165,8 @@ public class home_doctor extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable hospitalization;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

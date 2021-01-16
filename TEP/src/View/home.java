@@ -219,7 +219,7 @@ public class home extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
      private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, SQLException {                                         
       Controller cont = new Controller("τεπ");
-             cont.takeExaminationFromNurse(Integer.parseInt(amka_login));
+      cont.takeExaminationFromNurse(Integer.parseInt(amka_login));
     }   
       private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, SQLException {                                         
       Controller cont = new Controller("τεπ");

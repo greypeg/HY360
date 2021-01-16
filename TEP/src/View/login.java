@@ -179,16 +179,18 @@ public class login extends javax.swing.JFrame {
              
 
             } else if(selection == "Patient"){
-                String sql = "SELECT * FROM ασθενείς WHERE ΑΜΚΑ=?";
+                String sql = "SELECT * FROM χρήστες_πληροφοριακού_συστήματος WHERE AMKA_Ασθενούς=? and password=?";
                 pst = con.prepareStatement(sql);
                 pst.setString(1,this.id.getText());
+                 pst.setString(2, this.password.getText());
                 ResultSet rs = pst.executeQuery();
                 amka_login = this.id.getText();
                 
             }else{
-                String sql = "Select * from διοικητικό_προσωπικό where ID=?";
+                String sql = "Select * from χρήστες_πληροφοριακού_συστήματος where ID_Υπαλλήλου=? and password=?";
                 pst = con.prepareStatement(sql);
                 pst.setString(1,this.id.getText());
+                pst.setString(2, this.password.getText());
             }
 
             ResultSet rs = pst.executeQuery();
@@ -230,8 +232,6 @@ public class login extends javax.swing.JFrame {
         String selection = this.select.getSelectedItem().toString();
         if(selection == "Patient"){
             this.uid.setText("AMKA");
-            this.pass.setVisible(false);
-            this.password.setVisible(false);
         }
         else{
             this.uid.setText("Work ID");
